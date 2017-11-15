@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
-import { ExportModule } from '../../../index';
+import { ExportAsModule } from '../../../index';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,7 @@ import { ExportModule } from '../../../index';
   ],
   imports: [
     BrowserModule,
-    ExportModule,
+    ExportAsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
