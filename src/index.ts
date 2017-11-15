@@ -15,4 +15,4 @@ import { CommonModule } from '@angular/common';
   declarations: [],
   providers: [],
 })
-export class ExportModule {}
+export class ExportAsModule {}
