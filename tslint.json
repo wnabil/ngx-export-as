@@ -3,7 +3,6 @@
     "node_modules/codelyzer"
   ],
   "rules": {
-    "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
     "comment-format": [
@@ -12,7 +11,7 @@
     ],
     "curly": true,
     "eofline": true,
-    "forin": true,
+    "forin": false,
     "import-blacklist": [
       true,
       "rxjs"
@@ -25,20 +24,14 @@
     "interface-over-type-literal": true,
     "label-position": true,
     "max-line-length": [
-      true,
+      false,
       140
     ],
     "member-access": false,
     "member-ordering": [
       true,
-      {
-        "order": [
-          "static-field",
-          "instance-field",
-          "static-method",
-          "instance-method"
-        ]
-      }
+      "static-before-instance",
+      "variables-before-functions"
     ],
     "no-arg": true,
     "no-bitwise": true,
@@ -52,25 +45,22 @@
     ],
     "no-construct": true,
     "no-debugger": true,
-    "no-duplicate-super": true,
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
     "no-inferrable-types": [
-      true,
-      "ignore-params"
+      false,
+      "ignore-params",
+      "ignore-properties"
     ],
-    "no-misused-new": true,
-    "no-non-null-assertion": true,
     "no-shadowed-variable": true,
     "no-string-literal": false,
-    "no-string-throw": true,
+    "no-string-throw": false,
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
-    "no-unnecessary-initializer": true,
     "no-unused-expression": true,
     "no-use-before-declare": true,
-    "no-var-keyword": true,
+    "no-var-keyword": false,
     "object-literal-sort-keys": false,
     "one-line": [
       true,
@@ -81,16 +71,15 @@
     ],
     "prefer-const": true,
     "quotemark": [
-      true,
+      false,
       "single"
     ],
     "radix": true,
     "semicolon": [
-      true,
       "always"
     ],
     "triple-equals": [
-      true,
+      false,
       "allow-null-check"
     ],
     "typedef-whitespace": [

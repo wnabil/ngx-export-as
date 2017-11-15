@@ -1,0 +1,70 @@
+<div>
+  <h2>connected</h2>
+  <button (click)="connect()">system connect</button>
+  <button (click)="getVariable()">get variable</button>
+  <button (click)="setVariable()">set variable</button>
+  <button (click)="delVariable()">del variable</button>
+  <br><br><br>
+  <button (click)="getUser()">get user 1</button>
+  <button (click)="getAllUsers()">get all users</button>
+  <button (click)="createUser()">create user</button>
+  <button (click)="updateUser()">update user</button>
+  <button (click)="deleteUser()">delete user</button>
+  <button (click)="login()">login</button>
+  <button (click)="logout()">logout</button>
+  <button (click)="requestPassword()">request password</button>
+  <button (click)="userPasswordReset()">user password reset</button>
+  <button (click)="register()">user register</button>
+  <button (click)="cancelUser()">cancel user</button>
+  <button (click)="passwordReset()">password reset</button>
+  <button (click)="resendWelcomeEmail()">resend welcome email</button>
+  <br><br><br>
+  <button (click)="getNodeById()">get node by id</button>
+  <button (click)="createNode()">create node</button>
+  <button (click)="updateNode()">update node</button>
+  <button (click)="deleteNode()">delete node</button>
+  <button (click)="files()">files</button>
+  <button (click)="comments()">comments</button>
+  <button (click)="attachFilesToNode()">attach file to node</button>
+  <br><br><br>
+  <button (click)="createFile()">create file</button>
+  <button (click)="getAllFiles()">get list files</button>
+  <button (click)="getFileById()">get file by id</button>
+  <button (click)="deleteFile()">delete file</button>
+  <button (click)="createRaw()">create raw</button>
+  <br><br><br>
+  <button (click)="getAllComments()">get all comments</button>
+  <button (click)="getCommentById()">get comment by ud</button>
+  <button (click)="createComment()">create comment</button>
+  <button (click)="updateComment()">update comment</button>
+  <button (click)="deleteComment()">delete comment</button>
+  <button (click)="countAllByNodeId()">count comments by node id</button>
+  <button (click)="countNewCommentsByNodeId()">count new comments by node id</button>
+  <br><br><br>
+  <button (click)="getAllTaxonomyTerms()">get all taxonomy terms</button>
+  <button (click)="getTaxonomyTermById()">get taxonomy term by id</button>
+  <button (click)="createTaxonomyTerm()">create term</button>
+  <button (click)="updateTaxonomyTerm()">update taxonomy term</button>
+  <button (click)="deleteTaxonomyTerm()">delete taxonomy term</button>
+  <button (click)="getAllNodesForTerm()">get all nodes for term id</button>
+  <br><br><br>
+  <button (click)="getAllVocabularies()">get all taxonomy vocabularies</button>
+  <button (click)="getTaxonomyVocabularyById()">get taxonomy vocabulary by id</button>
+  <button (click)="createTaxonomyVocabulary()">create taxonomy vocabulary</button>
+  <button (click)="updateTaxonomyVocabulary()">update taxonomy vocabulary</button>
+  <button (click)="deleteTaxonomyVocabulary()">delete taxonomy vocabulary</button>
+  <button (click)="deleteTaxonomyVocabulary()">delete taxonomy vocabulary</button>
+  <button (click)="getTaxonomyVocabularyByMachineName()">get vocabulary by machine name</button>
+  <button (click)="getTaxonomyVocabularyTree()">get vocabulary tree</button>
+  <br><br><br>
+  <button (click)="getView()">get view</button>
+  <br><br><br>
+  <button (click)="entityIndex()">index entity</button>
+  <button (click)="entityRetrive()">retrive entity</button>
+  <button (click)="entityDelete()">delete entity</button>
+  <button (click)="entityCreate()">create entity</button>
+  <button (click)="entityUpdate()">update entity</button>
+  <br><br><br>
+  <button (click)="menu()">get menu</button>
+  {{result|json}}
+</div>

@@ -1,9 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist
-/tmp
-/out-tsc
+/demo/dist
 
 # dependencies
 /node_modules
@@ -32,12 +30,11 @@
 npm-debug.log
 testem.log
 /typings
-yarn-error.log
-
-# e2e
-/e2e/*.js
-/e2e/*.map
 
 # System Files
 .DS_Store
 Thumbs.db
+
+# build files 
+/lib
+/dist
