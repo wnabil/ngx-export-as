@@ -1,4 +1,4 @@
-<table #mytable id="mytable">
+<table id="mytable">
   <thead>
     <tr>
       <th>Country</th>
@@ -40,3 +40,14 @@
     </tr>
   </tbody>
 </table>
+
+<button (click)="exportAs('pdf')">export as pdf</button>
+<button (click)="exportAs('png')">export as png</button>
+<button (click)="exportAs('csv')">export as csv</button>
+<button (click)="exportAs('txt')">export as txt</button>
+<button (click)="exportAs('sql')">export as sql</button>
+<button (click)="exportAs('json')">export as json</button>
+<button (click)="exportAs('xml')">export as xml</button>
+<button (click)="exportAs('xlsx')">export as Ms-Excel</button>
+<button (click)="exportAs('docx')">export as MS-Word</button>
+<button (click)="exportAs('pptx')">export as Ms-Powerpoint</button>
