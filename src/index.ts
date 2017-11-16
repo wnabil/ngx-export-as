@@ -9,7 +9,6 @@ import { CommonModule } from '@angular/common';
  */
 
 import { ExportAsService } from './export-as.service';
-import './libs';
 
 @NgModule({
   imports: [
