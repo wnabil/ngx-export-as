@@ -24,6 +24,6 @@ export class ExportAsModule {}
  * exports
  */
 export { ExportAsService } from './export-as.service';
-export { ExportAsOptions } from './export-as-options.model';
+export { ExportAsConfig } from './export-as-config.model';
 
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ExportAsService, ExportAsOptions } from '../../../index'
+import { ExportAsService, ExportAsConfig } from '../../../index'
 
 @Component({
   selector: 'app-root',
@@ -8,9 +8,9 @@ import { ExportAsService, ExportAsOptions } from '../../../index'
 })
 export class AppComponent {
 
-  options: ExportAsOptions = {
+  config: ExportAsConfig = {
     type: 'pdf',
-    tableID: "mytable"
+    elementId: "mytable",
   };
 
   constructor(
@@ -18,9 +18,9 @@ export class AppComponent {
   ) {}
 
   exportAs(type) {
-    this.options.type = type;
-    this.exportAsService.getFile(this.options).subscribe(file => {
-      console.log(file);
+    this.config.type = type;
+    this.exportAsService.get(this.config).subscribe(blob => {
+      console.log(blob);
     });
   }
 
