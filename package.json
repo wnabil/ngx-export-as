@@ -6,7 +6,7 @@
     "build": "rm -rf lib && ngc && npm run clean",
     "clean": "rm -rf dist"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/common": "^4.2.4",
     "@angular/compiler": "^4.2.4",
@@ -31,5 +31,25 @@
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
     "typescript": "~2.3.3"
-  }
+  },
+  "description": "UNDER DEVELOPEMENT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wnabil/ngx-exports-as.git"
+  },
+  "keywords": [
+    "angular",
+    "export",
+    "pdf",
+    "typescript",
+    "ng",
+    "ngx"
+  ],
+  "author": "Wassem Nabil <w.nabil@orangestudio.com> (http://arabianlolers.com)",
+  "bugs": {
+    "url": "https://github.com/wnabil/ngx-exports-as/issues"
+  },
+  "homepage": "https://github.com/wnabil/ngx-exports-as#readme"
 }
