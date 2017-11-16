@@ -19,8 +19,9 @@ export class AppComponent {
 
   exportAs(type) {
     this.config.type = type;
-    this.exportAsService.get(this.config).subscribe(blob => {
-      console.log(blob);
+    // this.exportAsService.save(this.config, "file")
+    this.exportAsService.get(this.config).subscribe(content => {
+      this.exportAsService.download("myfile", content);
     });
   }
 
