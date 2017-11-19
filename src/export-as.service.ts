@@ -29,12 +29,15 @@ export class ExportAsService {
 
   contentToBlob(content: string): Observable<Blob> {
     return Observable.create((observer) => {
-      fetch(content)
-      .then(res => res.blob())
-      .then(blob => {
-        observer.next(blob);
-        observer.complete();
-      });
+      const arr = content.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1])
+      var n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+      }
+      observer.next(new Blob([u8arr], {type: mime}));
+      observer.complete();
     });
   }
 
