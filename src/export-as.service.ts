@@ -56,6 +56,7 @@ export class ExportAsService {
       const jspdf = new jsPDF();
       this.getPNG(config).subscribe(imgData => {
         const image = new Image(jspdf.internal.pageSize.width);
+        image.src = imgData;
         jspdf.addImage(imgData, 'PNG', 0, 0, image.width, image.height);
         if (config.download) {
           jspdf.save(config.fileName);
