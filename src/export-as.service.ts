@@ -13,7 +13,12 @@ export class ExportAsService {
 
   get(config: ExportAsConfig): Observable<string | null> {
     const func = "get" + config.type.toUpperCase();
-    return this[func](config);
+
+    if (this[func]) {
+      return this[func](config);
+    }
+
+    return Observable.create((observer) => { observer.error("Export type is not supported.") });
   }
 
   save(config: ExportAsConfig, fileName: string): void {
@@ -50,7 +55,8 @@ export class ExportAsService {
     return Observable.create((observer) => {
       const jspdf = new jsPDF();
       this.getPNG(config).subscribe(imgData => {
-        jspdf.addImage(imgData, 'PNG', 0, 0);
+        const image = new Image(jspdf.internal.pageSize.width);
+        jspdf.addImage(imgData, 'PNG', 0, 0, image.width, image.height);
         if (config.download) {
           jspdf.save(config.fileName);
           observer.next();
