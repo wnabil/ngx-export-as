@@ -1,6 +1,6 @@
 {
   "name": "ngx-export-as",
-  "version": "0.0.1-alfa",
+  "version": "0.0.2-alfa",
   "license": "MIT",
   "scripts": {
     "build": "rm -rf lib && ngc && npm run clean",
