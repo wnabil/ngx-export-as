@@ -38,6 +38,16 @@ export class ExportAsService {
     });
   }
 
+  removeFileTypeFromBase64(fileContent: string): string {
+    const re = /^data:[^]*;base64,/g;
+    const newContent: string = re[Symbol.replace](fileContent, '');
+    return newContent;
+  }
+
+  addFileTypeToBase64(fileContent: string, fileMime: string): string {
+    return `data:${fileMime};base64,${fileContent}`;
+  }
+
   download(fileName, dataURL): void {
     this.contentToBlob(dataURL).subscribe(blob => {
       const element = document.createElement('a');
