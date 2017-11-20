@@ -71,14 +71,15 @@ export class ExportAsService {
     return Observable.create((observer) => {
       const jspdf = new jsPDF();
       const element: HTMLElement = document.getElementById(config.elementId);
-      jspdf.fromHTML(element, 0, 0, config.options);
-      if (config.download) {
-        jspdf.save(config.fileName);
-        observer.next();
-      }else {
-        observer.next(jspdf.output("datauristring"));
-      }
-      observer.complete();
+      jspdf.addHTML(element, function() {
+        if (config.download) {
+          jspdf.save(config.fileName);
+          observer.next();
+        }else {
+          observer.next(jspdf.output("datauristring"));
+        }
+        observer.complete();
+      });
     });
   }
 
