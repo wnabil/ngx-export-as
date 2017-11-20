@@ -37,7 +37,7 @@
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wnabil/ngx-exports-as.git"
+    "url": "git+https://github.com/wnabil/ngx-export-as.git"
   },
   "keywords": [
     "angular",
@@ -49,7 +49,7 @@
   ],
   "author": "Wassem Nabil <w.nabil@orangestudio.com> (http://arabianlolers.com)",
   "bugs": {
-    "url": "https://github.com/wnabil/ngx-exports-as/issues"
+    "url": "https://github.com/wnabil/ngx-export-as/issues"
   },
-  "homepage": "https://github.com/wnabil/ngx-exports-as#readme"
+  "homepage": "https://github.com/wnabil/ngx-export-as#readme"
 }

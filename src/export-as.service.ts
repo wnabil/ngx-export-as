@@ -3,8 +3,11 @@ import { Observable } from 'rxjs/Rx';
 
 import { ExportAsConfig } from './export-as-config.model';
 
-import * as jsPDF from 'jspdf';
 import * as html2canvas from 'html2canvas';
+import * as jsPDF from 'jspdf';
+
+global['html2canvas'] = html2canvas;
+global['jsPDF'] = jsPDF;
 
 @Injectable()
 export class ExportAsService {
@@ -51,7 +54,7 @@ export class ExportAsService {
     return `data:${fileMime};base64,${fileContent}`;
   }
 
-  download(fileName, dataURL): void {
+  download(fileName: string, dataURL: string): void {
     this.contentToBlob(dataURL).subscribe(blob => {
       const element = document.createElement('a');
       const url = window.URL.createObjectURL(blob);
@@ -67,27 +70,22 @@ export class ExportAsService {
   private getPDF(config: ExportAsConfig): Observable<string | null> {
     return Observable.create((observer) => {
       const jspdf = new jsPDF();
-      this.getPNG(config).subscribe(imgData => {
-        const image = new Image(jspdf.internal.pageSize.width);
-        image.src = imgData;
-        jspdf.addImage(imgData, 'PNG', 0, 0, image.width, image.height);
-        if (config.download) {
-          jspdf.save(config.fileName);
-          observer.next();
-        }else {
-          observer.next(jspdf.output("datauristring"));
-        }
-        observer.complete();
-      }, err => {
-        observer.error(err);
-      });
+      const element: HTMLElement = document.getElementById(config.elementId);
+      jspdf.fromHTML(element, 0, 0, config.options);
+      if (config.download) {
+        jspdf.save(config.fileName);
+        observer.next();
+      }else {
+        observer.next(jspdf.output("datauristring"));
+      }
+      observer.complete();
     });
   }
 
   private getPNG(config: ExportAsConfig): Observable<string | null> {
     return Observable.create((observer) => {
       const element: HTMLElement = document.getElementById(config.elementId);
-      html2canvas(element).then((canvas) => {
+      html2canvas(element, config.options).then((canvas) => {
         const imgData = canvas.toDataURL("image/PNG");
         if (config.type == "png" && config.download) {
           this.download(config.fileName, imgData);

@@ -9,7 +9,10 @@
     "lib": ["es2015", "dom"],
     "sourceMap": false,
     "outDir": "./lib",
-    "declaration": true
+    "declaration": true,
+    "types": [
+      "node"
+    ]
   },
   "exclude": [
     "demo/**/*",

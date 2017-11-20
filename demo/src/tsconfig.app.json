@@ -3,7 +3,6 @@
   "compilerOptions": {
     "outDir": "demo/src/dist",
     "module": "es2015",
-    "baseUrl": "",
-    "types": []
+    "baseUrl": ""
   }
 }

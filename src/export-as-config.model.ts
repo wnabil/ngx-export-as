@@ -5,4 +5,5 @@ export interface ExportAsConfig {
   elementId: string,
   download?: boolean,
   fileName?: string,
+  options?: any,
 }
