@@ -26,7 +26,7 @@ export class ExportAsService {
 
   save(config: ExportAsConfig, fileName: string): void {
     config.download = true;
-    config.fileName = fileName;
+    config.fileName = fileName + '.' + config.type;
     this.get(config).subscribe();
   }
 
@@ -98,6 +98,30 @@ export class ExportAsService {
       }, err => {
         observer.error(err);
       });
+    });
+  }
+
+  private getCSV(config: ExportAsConfig): Observable<string | null> {
+    return Observable.create((observer) => {
+      const element: HTMLElement = document.getElementById(config.elementId);
+      const csv = [];
+      const rows: any = element.querySelectorAll("table tr");
+      rows.forEach((rowElement, index: number) => {
+        const row = [];
+        const cols = rowElement.querySelectorAll("td, th");
+        cols.forEach((col, colIndex: number) => {
+          row.push(col.innerText);
+        });
+        csv.push(row.join(","));
+      });
+      const csvContent = 'data:text/csv;base64,' + btoa(csv.join("\n"));
+      if (config.download) {
+        this.download(config.fileName, csvContent);
+        observer.next();
+      }else {
+        observer.next(csvContent);
+      }
+      observer.complete();
     });
   }
 
