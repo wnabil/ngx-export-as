@@ -5,6 +5,7 @@ import { ExportAsConfig } from './export-as-config.model';
 
 import * as html2canvas from 'html2canvas';
 import * as jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 
 global['html2canvas'] = html2canvas;
 global['jsPDF'] = jsPDF;
@@ -123,6 +124,35 @@ export class ExportAsService {
       }
       observer.complete();
     });
+  }
+
+  private getTXT(config: ExportAsConfig): Observable<string | null> {
+    const nameFrags = config.fileName.split(".");
+    config.fileName = `${nameFrags[0]}.txt`;
+    return this.getCSV(config);
+  }
+
+  private getXLS(config: ExportAsConfig): Observable<string | null> {
+    return Observable.create((observer) => {
+
+      const element: HTMLElement = document.getElementById(config.elementId);
+      const ws3 = XLSX.utils.table_to_sheet(element, config.options);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws3, config.fileName);
+      const out = XLSX.write(wb, { type: 'base64' });
+      const xlsContent = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + out;
+      if (config.download) {
+        this.download(config.fileName, xlsContent);
+        observer.next();
+      } else {
+        observer.next(out);
+      }
+      observer.complete();
+    });
+  }
+
+  private getXLSX(config: ExportAsConfig): Observable<string | null> {
+    return this.getXLS(config);
   }
 
 }
