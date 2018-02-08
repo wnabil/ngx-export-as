@@ -145,7 +145,7 @@ export class ExportAsService {
         this.download(config.fileName, xlsContent);
         observer.next();
       } else {
-        observer.next(out);
+        observer.next(xlsContent);
       }
       observer.complete();
     });
