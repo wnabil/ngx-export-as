@@ -4,5 +4,8 @@
     "outDir": "demo/src/dist",
     "module": "es2015",
     "baseUrl": ""
-  }
+  },
+  "exclude": [
+    "node_modules/**/*"
+  ]
 }
