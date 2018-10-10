@@ -8,7 +8,7 @@ import * as jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import * as htmlDocx from 'html-docx-js/dist/html-docx';
 
-global['html2canvas'] = html2canvas;
+window['html2canvas'] = html2canvas;
 
 @Injectable()
 export class ExportAsService {
