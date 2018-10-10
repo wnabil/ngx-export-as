@@ -129,3 +129,6 @@ const exportAsConfig: ExportAsConfig = {
 - **1.0.0**
   - Initial release
   - Implement all available methods
+
+- **1.1.0**
+  - Upgrade to Angular 6
