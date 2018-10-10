@@ -1,6 +1,6 @@
 {
   "name": "ngx-export-as",
-  "version": "0.0.8-alpha",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "build": "rm -rf lib && ngc && npm run clean",
@@ -14,6 +14,7 @@
     "@angular/platform-browser": "^5.2.4",
     "@angular/platform-browser-dynamic": "^5.2.4",
     "core-js": "^2.4.1",
+    "html-docx-js": "^0.3.1",
     "html2canvas": "^0.5.0-beta4",
     "jspdf": "^1.4.1",
     "rxjs": "^5.5.2",
@@ -23,8 +24,6 @@
   "devDependencies": {
     "@angular/cli": "^1.7.3",
     "@angular/compiler-cli": "^5.2.4",
-    "@types/html2canvas": "^0.5.35",
-    "@types/jspdf": "^1.1.31",
     "@types/node": "~9.6.2",
     "@types/rx": "^4.1.1",
     "codelyzer": "~4.2.1",

@@ -1,4 +1,4 @@
-export type SupportedExtensions = 'pdf' | 'png' | 'sql' | 'xlsx' | 'docx' | 'pptx' | 'txt' | 'csv' | 'json' | 'xml';
+export type SupportedExtensions = 'pdf' | 'png' | 'xlsx' | 'xls' | 'docx' | 'doc' | 'txt' | 'csv' | 'json' | 'xml';
 
 export interface ExportAsConfig {
   type: SupportedExtensions,

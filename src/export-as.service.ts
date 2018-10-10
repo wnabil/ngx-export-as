@@ -6,9 +6,9 @@ import { ExportAsConfig } from './export-as-config.model';
 import * as html2canvas from 'html2canvas';
 import * as jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
+import * as htmlDocx from 'html-docx-js/dist/html-docx';
 
 global['html2canvas'] = html2canvas;
-global['jsPDF'] = jsPDF;
 
 @Injectable()
 export class ExportAsService {
@@ -17,7 +17,6 @@ export class ExportAsService {
 
   get(config: ExportAsConfig): Observable<string | null> {
     const func = "get" + config.type.toUpperCase();
-
     if (this[func]) {
       return this[func](config);
     }
@@ -55,17 +54,21 @@ export class ExportAsService {
     return `data:${fileMime};base64,${fileContent}`;
   }
 
-  download(fileName: string, dataURL: string): void {
+  downloadFromDataURL(fileName: string, dataURL: string): void {
     this.contentToBlob(dataURL).subscribe(blob => {
-      const element = document.createElement('a');
-      const url = window.URL.createObjectURL(blob);
-      element.setAttribute('download', fileName);
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.href = url;
-      element.click();
-      document.body.removeChild(element);
+      this.downloadFromBlob(blob, fileName);
     });
+  }
+
+  downloadFromBlob(blob: Blob, fileName: string) {
+    const element = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    element.setAttribute('download', fileName);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.href = url;
+    element.click();
+    document.body.removeChild(element);
   }
 
   private getPDF(config: ExportAsConfig): Observable<string | null> {
@@ -90,7 +93,7 @@ export class ExportAsService {
       html2canvas(element, config.options).then((canvas) => {
         const imgData = canvas.toDataURL("image/PNG");
         if (config.type == "png" && config.download) {
-          this.download(config.fileName, imgData);
+          this.downloadFromDataURL(config.fileName, imgData);
           observer.next();
         } else {
           observer.next(imgData);
@@ -117,7 +120,7 @@ export class ExportAsService {
       });
       const csvContent = 'data:text/csv;base64,' + btoa(csv.join("\n"));
       if (config.download) {
-        this.download(config.fileName, csvContent);
+        this.downloadFromDataURL(config.fileName, csvContent);
         observer.next();
       } else {
         observer.next(csvContent);
@@ -142,7 +145,7 @@ export class ExportAsService {
       const out = XLSX.write(wb, { type: 'base64' });
       const xlsContent = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + out;
       if (config.download) {
-        this.download(config.fileName, xlsContent);
+        this.downloadFromDataURL(config.fileName, xlsContent);
         observer.next();
       } else {
         observer.next(xlsContent);
@@ -153,6 +156,86 @@ export class ExportAsService {
 
   private getXLSX(config: ExportAsConfig): Observable<string | null> {
     return this.getXLS(config);
+  }
+
+  private getDOCX(config: ExportAsConfig): Observable<string | null> {
+    return Observable.create((observer) => {
+      const contentDocument: string = document.getElementById(config.elementId).outerHTML;
+      const content = '<!DOCTYPE html>' + contentDocument;
+      const converted = htmlDocx.asBlob(content, config.options);
+      if (config.download) {
+        this.downloadFromBlob(converted, config.fileName);
+        observer.next();
+        observer.complete();
+      } else {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          observer.next(base64data);
+          observer.complete();
+        }
+        reader.readAsDataURL(converted);
+      }
+    });
+  }
+
+  private getDOC(config: ExportAsConfig): Observable<string | null> {
+    return this.getDOCX(config);
+  }
+
+  private getJSON(config: ExportAsConfig): Observable<any[] | null> {
+    return Observable.create((observer) => {
+      const data = []; // first row needs to be headers
+      const headers = [];
+      const table = <HTMLTableElement>document.getElementById(config.elementId);
+      for (let index = 0; index < table.rows[0].cells.length; index++) {
+        headers[index] = table.rows[0].cells[index].innerHTML.toLowerCase().replace(/ /gi, '');
+      }
+      // go through cells
+      for (let i = 1; i < table.rows.length; i++) {
+        const tableRow = table.rows[i]; const rowData = {};
+        for (var j = 0; j < tableRow.cells.length; j++) {
+          rowData[headers[j]] = tableRow.cells[j].innerHTML;
+        }
+        data.push(rowData);
+      }
+      const jsonString = JSON.stringify(data);
+      const jsonBase64 = Buffer.from(jsonString).toString("base64");
+      const dataStr = "data:text/json;base64," + jsonBase64;
+      if (config.download) {
+        this.downloadFromDataURL(config.fileName, dataStr);
+        observer.next();
+      } else {
+        observer.next(data);
+      }
+      observer.complete();
+    });
+  }
+
+  private getXML(config: ExportAsConfig): Observable<string | null> {
+    return Observable.create((observer) => {
+      var xml = '<?xml version="1.0" encoding="UTF-8"?><Root><Classes>';
+      const tritem = document.getElementById(config.elementId).getElementsByTagName("tr");
+      for (let i = 0; i < tritem.length; i++) {
+        const celldata = tritem[i];
+        if (celldata.cells.length > 0) {
+          xml += "<Class name='" + celldata.cells[0].textContent + "'>\n";
+          for (var m = 1; m < celldata.cells.length; ++m) {
+            xml += "\t<data>" + celldata.cells[m].textContent + "</data>\n";
+          }
+          xml += "</Class>\n";
+        }
+      }
+      xml += '</Classes></Root>';
+      const base64 = 'data:text/xml;base64,' + btoa(xml);
+      if (config.download) {
+        this.downloadFromDataURL(config.fileName, base64);
+        observer.next();
+      } else {
+        observer.next(base64);
+      }
+      observer.complete();
+    });
   }
 
 }
