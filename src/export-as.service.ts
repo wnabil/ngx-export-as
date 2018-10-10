@@ -34,13 +34,13 @@ export class ExportAsService {
   contentToBlob(content: string): Observable<Blob> {
     return Observable.create((observer) => {
       const arr = content.split(','), mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1])
+        bstr = atob(arr[1])
       var n = bstr.length;
       const u8arr = new Uint8Array(n);
       while (n--) {
-          u8arr[n] = bstr.charCodeAt(n);
+        u8arr[n] = bstr.charCodeAt(n);
       }
-      observer.next(new Blob([u8arr], {type: mime}));
+      observer.next(new Blob([u8arr], { type: mime }));
       observer.complete();
     });
   }
@@ -72,11 +72,11 @@ export class ExportAsService {
     return Observable.create((observer) => {
       const jspdf = new jsPDF();
       const element: HTMLElement = document.getElementById(config.elementId);
-      jspdf.addHTML(element, function() {
+      jspdf.addHTML(element, function () {
         if (config.download) {
           jspdf.save(config.fileName);
           observer.next();
-        }else {
+        } else {
           observer.next(jspdf.output("datauristring"));
         }
         observer.complete();
@@ -92,7 +92,7 @@ export class ExportAsService {
         if (config.type == "png" && config.download) {
           this.download(config.fileName, imgData);
           observer.next();
-        }else {
+        } else {
           observer.next(imgData);
         }
         observer.complete();
@@ -119,7 +119,7 @@ export class ExportAsService {
       if (config.download) {
         this.download(config.fileName, csvContent);
         observer.next();
-      }else {
+      } else {
         observer.next(csvContent);
       }
       observer.complete();
