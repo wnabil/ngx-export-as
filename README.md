@@ -132,3 +132,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.1.0**
   - Upgrade to Angular 6
+
+- **1.1.1**
+  - fix issue #5
