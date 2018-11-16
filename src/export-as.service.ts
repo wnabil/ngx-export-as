@@ -200,7 +200,7 @@ export class ExportAsService {
         data.push(rowData);
       }
       const jsonString = JSON.stringify(data);
-      const jsonBase64 = Buffer.from(jsonString).toString("base64");
+      const jsonBase64 = btoa(jsonString);
       const dataStr = "data:text/json;base64," + jsonBase64;
       if (config.download) {
         this.downloadFromDataURL(config.fileName, dataStr);
