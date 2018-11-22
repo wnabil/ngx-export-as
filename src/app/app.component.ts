@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
-import { ExportAsService, ExportAsConfig } from '../../../index'
+import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
 
   config: ExportAsConfig = {
     type: 'pdf',
-    elementId: "mytable",
+    elementId: 'mytable',
   };
 
   constructor(
@@ -19,7 +19,7 @@ export class AppComponent {
 
   exportAs(type) {
     this.config.type = type;
-    this.exportAsService.save(this.config, "myFile");
+    this.exportAsService.save(this.config, 'myFile');
     // this.exportAsService.get(this.config).subscribe(content => {
     //   console.log(content);
     // });

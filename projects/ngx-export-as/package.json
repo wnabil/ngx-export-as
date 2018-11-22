@@ -1,0 +1,36 @@
+{
+  "name": "ngx-export-as",
+  "version": "1.2.2",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "html-docx-js": "^0.3.1",
+    "html2canvas": "^0.5.0-beta4",
+    "jspdf": "^1.4.1",
+    "xlsx": "^0.14.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "^7.0.0",
+    "@angular/core": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wnabil/ngx-export-as.git"
+  },
+  "keywords": [
+    "angular",
+    "export",
+    "pdf",
+    "typescript",
+    "ng",
+    "ngx",
+    "xls",
+    "xlsx",
+    "csv"
+  ],
+  "author": "Wassem Nabil <w.nabil@orangestudio.com> (http://arabianlolers.com)",
+  "bugs": {
+    "url": "https://github.com/wnabil/ngx-export-as/issues"
+  },
+  "homepage": "https://github.com/wnabil/ngx-export-as#readme"
+}

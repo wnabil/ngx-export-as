@@ -1,27 +1,29 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs';
 
 import { ExportAsConfig } from './export-as-config.model';
 
-import * as html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas';
 import * as jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import * as htmlDocx from 'html-docx-js/dist/html-docx';
 
 window['html2canvas'] = html2canvas;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ExportAsService {
 
   constructor() { }
 
   get(config: ExportAsConfig): Observable<string | null> {
-    const func = "get" + config.type.toUpperCase();
+    const func = 'get' + config.type.toUpperCase();
     if (this[func]) {
       return this[func](config);
     }
 
-    return Observable.create((observer) => { observer.error("Export type is not supported.") });
+    return Observable.create((observer) => { observer.error('Export type is not supported.'); });
   }
 
   save(config: ExportAsConfig, fileName: string): void {
@@ -33,8 +35,8 @@ export class ExportAsService {
   contentToBlob(content: string): Observable<Blob> {
     return Observable.create((observer) => {
       const arr = content.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1])
-      var n = bstr.length;
+        bstr = atob(arr[1]);
+      let n = bstr.length;
       const u8arr = new Uint8Array(n);
       while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
@@ -80,7 +82,7 @@ export class ExportAsService {
           jspdf.save(config.fileName);
           observer.next();
         } else {
-          observer.next(jspdf.output("datauristring"));
+          observer.next(jspdf.output('datauristring'));
         }
         observer.complete();
       });
@@ -91,8 +93,8 @@ export class ExportAsService {
     return Observable.create((observer) => {
       const element: HTMLElement = document.getElementById(config.elementId);
       html2canvas(element, config.options).then((canvas) => {
-        const imgData = canvas.toDataURL("image/PNG");
-        if (config.type == "png" && config.download) {
+        const imgData = canvas.toDataURL('image/PNG');
+        if (config.type === 'png' && config.download) {
           this.downloadFromDataURL(config.fileName, imgData);
           observer.next();
         } else {
@@ -109,16 +111,16 @@ export class ExportAsService {
     return Observable.create((observer) => {
       const element: HTMLElement = document.getElementById(config.elementId);
       const csv = [];
-      const rows: any = element.querySelectorAll("table tr");
+      const rows: any = element.querySelectorAll('table tr');
       rows.forEach((rowElement, index: number) => {
         const row = [];
-        const cols = rowElement.querySelectorAll("td, th");
+        const cols = rowElement.querySelectorAll('td, th');
         cols.forEach((col, colIndex: number) => {
           row.push(col.innerText);
         });
-        csv.push(row.join(","));
+        csv.push(row.join(','));
       });
-      const csvContent = 'data:text/csv;base64,' + btoa(csv.join("\n"));
+      const csvContent = 'data:text/csv;base64,' + btoa(csv.join('\n'));
       if (config.download) {
         this.downloadFromDataURL(config.fileName, csvContent);
         observer.next();
@@ -130,7 +132,7 @@ export class ExportAsService {
   }
 
   private getTXT(config: ExportAsConfig): Observable<string | null> {
-    const nameFrags = config.fileName.split(".");
+    const nameFrags = config.fileName.split('.');
     config.fileName = `${nameFrags[0]}.txt`;
     return this.getCSV(config);
   }
@@ -173,7 +175,7 @@ export class ExportAsService {
           const base64data = reader.result;
           observer.next(base64data);
           observer.complete();
-        }
+        };
         reader.readAsDataURL(converted);
       }
     });
@@ -194,14 +196,14 @@ export class ExportAsService {
       // go through cells
       for (let i = 1; i < table.rows.length; i++) {
         const tableRow = table.rows[i]; const rowData = {};
-        for (var j = 0; j < tableRow.cells.length; j++) {
+        for (let j = 0; j < tableRow.cells.length; j++) {
           rowData[headers[j]] = tableRow.cells[j].innerHTML;
         }
         data.push(rowData);
       }
       const jsonString = JSON.stringify(data);
       const jsonBase64 = btoa(jsonString);
-      const dataStr = "data:text/json;base64," + jsonBase64;
+      const dataStr = 'data:text/json;base64,' + jsonBase64;
       if (config.download) {
         this.downloadFromDataURL(config.fileName, dataStr);
         observer.next();
@@ -214,16 +216,16 @@ export class ExportAsService {
 
   private getXML(config: ExportAsConfig): Observable<string | null> {
     return Observable.create((observer) => {
-      var xml = '<?xml version="1.0" encoding="UTF-8"?><Root><Classes>';
-      const tritem = document.getElementById(config.elementId).getElementsByTagName("tr");
+      let xml = '<?xml version="1.0" encoding="UTF-8"?><Root><Classes>';
+      const tritem = document.getElementById(config.elementId).getElementsByTagName('tr');
       for (let i = 0; i < tritem.length; i++) {
         const celldata = tritem[i];
         if (celldata.cells.length > 0) {
-          xml += "<Class name='" + celldata.cells[0].textContent + "'>\n";
-          for (var m = 1; m < celldata.cells.length; ++m) {
-            xml += "\t<data>" + celldata.cells[m].textContent + "</data>\n";
+          xml += '<Class name="' + celldata.cells[0].textContent + '">\n';
+          for (let m = 1; m < celldata.cells.length; ++m) {
+            xml += '\t<data>' + celldata.cells[m].textContent + '</data>\n';
           }
-          xml += "</Class>\n";
+          xml += '</Class>\n';
         }
       }
       xml += '</Classes></Root>';

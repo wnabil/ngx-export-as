@@ -1,24 +1,29 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "removeComments": true,
-    "lib": ["es2015", "dom"],
-    "sourceMap": false,
-    "outDir": "./lib",
-    "declaration": true,
-    "types": [
-      "node"
-    ]
-  },
-  "exclude": [
-    "demo/**/*",
-    "node_modules/**/*"
-  ],
-  "angularCompilerOptions": {
-    "genDir": "./dist"
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {
+      "ngx-export-as": [
+        "dist/ngx-export-as"
+      ],
+      "ngx-export-as/*": [
+        "dist/ngx-export-as/*"
+      ]
+    }
   }
 }

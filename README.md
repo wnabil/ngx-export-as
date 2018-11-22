@@ -21,11 +21,9 @@ A simple module to export the html or table elements to downloadable file.
   - Microsoft Word documents - [SheetJS js-xlsx](https://github.com/SheetJS/js-xlsx)
 
 ## Demo
-Check out the [Demo folder](https://github.com/wnabil/ngx-export-as/tree/master/demo) for a full demo.
-
-Running the demo:
+ Running the demo:
 ```bash
-git clone git@github.com:wnabil/ngx-export-as.git
+git clone https://github.com/wnabil/ngx-export-as.git
 cd ngx-export-as
 npm install
 ng serve
@@ -135,3 +133,9 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.1.1**
   - fix issue #5
+
+- **1.2.0**
+  - switch to ng lib, ng-packagr
+
+- **1.2.2**
+  - fix readme and license
