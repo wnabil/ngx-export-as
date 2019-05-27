@@ -26,6 +26,7 @@ A simple module to export the html or table elements to downloadable file.
 git clone https://github.com/wnabil/ngx-export-as.git
 cd ngx-export-as
 npm install
+ng build ngx-export-as
 ng serve
 ```
 Then navigate to `localhost:4200` via your browser.
@@ -139,3 +140,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.2.2**
   - fix readme and license
+
+- **1.2.3**
+  - Fix issue #9 - update readme
