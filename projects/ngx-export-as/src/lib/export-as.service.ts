@@ -124,7 +124,7 @@ export class ExportAsService {
         }
         csv.push(row.join(','));
       }
-      const csvContent = 'data:text/csv;base64,' + btoa(csv.join('\n'));
+      const csvContent = 'data:text/csv;base64,' + this.btoa(csv.join('\n'));
       if (config.download) {
         this.downloadFromDataURL(config.fileName, csvContent);
         observer.next();
@@ -206,7 +206,7 @@ export class ExportAsService {
         data.push(rowData);
       }
       const jsonString = JSON.stringify(data);
-      const jsonBase64 = btoa(jsonString);
+      const jsonBase64 = this.btoa(jsonString);
       const dataStr = 'data:text/json;base64,' + jsonBase64;
       if (config.download) {
         this.downloadFromDataURL(config.fileName, dataStr);
@@ -233,7 +233,7 @@ export class ExportAsService {
         }
       }
       xml += '</Classes></Root>';
-      const base64 = 'data:text/xml;base64,' + btoa(xml);
+      const base64 = 'data:text/xml;base64,' + this.btoa(xml);
       if (config.download) {
         this.downloadFromDataURL(config.fileName, base64);
         observer.next();
@@ -242,6 +242,10 @@ export class ExportAsService {
       }
       observer.complete();
     });
+  }
+
+  private btoa(content: string) {
+    return btoa(unescape(encodeURIComponent(content)));
   }
 
 }
