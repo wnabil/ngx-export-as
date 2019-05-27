@@ -10,9 +10,7 @@ import * as htmlDocx from 'html-docx-js/dist/html-docx';
 
 window['html2canvas'] = html2canvas;
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ExportAsService {
 
   constructor() { }

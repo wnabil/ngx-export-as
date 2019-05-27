@@ -149,3 +149,4 @@ const exportAsConfig: ExportAsConfig = {
 - **1.2.3**
   - Fix issue #9 - update readme
   - Fix issue #12 - Add support for internet explorer "Please check the docs section for IE"
+  - Fix issue #15 - Support for angular 4 and 5
