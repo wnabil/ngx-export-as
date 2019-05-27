@@ -63,14 +63,18 @@ export class ExportAsService {
   }
 
   downloadFromBlob(blob: Blob, fileName: string) {
-    const element = document.createElement('a');
     const url = window.URL.createObjectURL(blob);
-    element.setAttribute('download', fileName);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.href = url;
-    element.click();
-    document.body.removeChild(element);
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(blob, fileName);
+    } else {
+      const element = document.createElement('a');
+      element.setAttribute('download', fileName);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.href = url;
+      element.click();
+      document.body.removeChild(element);
+    }
   }
 
   private getPDF(config: ExportAsConfig): Observable<string | null> {
@@ -112,14 +116,16 @@ export class ExportAsService {
       const element: HTMLElement = document.getElementById(config.elementId);
       const csv = [];
       const rows: any = element.querySelectorAll('table tr');
-      rows.forEach((rowElement, index: number) => {
+      for (let index = 0; index < rows.length; index++) {
+        const rowElement = rows[index];
         const row = [];
         const cols = rowElement.querySelectorAll('td, th');
-        cols.forEach((col, colIndex: number) => {
+        for (let colIndex = 0; colIndex < cols.length; colIndex++) {
+          const col = cols[colIndex];
           row.push(col.innerText);
-        });
+        }
         csv.push(row.join(','));
-      });
+      }
       const csvContent = 'data:text/csv;base64,' + btoa(csv.join('\n'));
       if (config.download) {
         this.downloadFromDataURL(config.fileName, csvContent);

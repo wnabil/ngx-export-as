@@ -94,6 +94,11 @@ export class AppComponent {
   }
 ```
 
+## IE Users
+ - For Microsoft Internet Explorer this library requires many polyfills, please enable all BROWSER POLYFILLS.
+ - [typedarray](https://github.com/inexorabletash/polyfill/blob/master/typedarray.js) Custom polyfill is also required.
+ - Please refere to `polyfills.ts` demo
+
 ## Contribution, Ideas and pull requests are welcome, Please open an issue on Github or contact me on w.nabil@orangestudio.com if i didn't response in approx 2 days.
 
 ## Configuration
@@ -143,3 +148,4 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.2.3**
   - Fix issue #9 - update readme
+  - Fix issue #12 - Add support for internet explorer "Please check the docs section for IE"
