@@ -16,7 +16,7 @@ A simple module to export the html or table elements to downloadable file.
 
 ## Used libraries "Useful for custom format options"
   - PNG - [HTML2Canvas](https://github.com/niklasvh/html2canvas/)
-  - PDF - [jsPDF](https://github.com/MrRio/jsPDF)
+  - PDF - [HTML2PDF](https://github.com/eKoopmans/html2pdf.js)
   - Microsoft Excel sheets - [html-docx-js](https://github.com/evidenceprime/html-docx-js)
   - Microsoft Word documents - [SheetJS js-xlsx](https://github.com/SheetJS/js-xlsx)
 
@@ -124,11 +124,6 @@ const exportAsConfig: ExportAsConfig = {
   - Json type get method will return the data in json object format not as base64
   - Not all the libraries supports the html element, for example the json and xlsx formats required the element to be an HTML Table
 
-### Known issues
-  - Issue #1 PNG and PDF exports only the available elements in the view port // related to HTML2Canvas - PR welcome
-  - Issue #3 This package using jsPDF but at the moment it doesn't support the multiple pages // PR welcome
-  - Code comments are missing // WIP
-
 ### Change Logs
 - **1.0.0**
   - Initial release
@@ -151,3 +146,6 @@ const exportAsConfig: ExportAsConfig = {
   - Fix issue #12 - Add support for internet explorer "Please check the docs section for IE"
   - Fix issue #15 - Support for angular 4 and 5
   - Fix issue #16 - add support for special language chars
+
+- **1.2.4**
+  - fix all pdf issues for html2canvas - #1, #3, #11

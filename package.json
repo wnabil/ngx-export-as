@@ -27,12 +27,11 @@
     "@angular/platform-browser-dynamic": "~7.0.0",
     "@angular/router": "~7.0.0",
     "core-js": "^2.5.4",
-    "rxjs": "~6.3.3",
-    "zone.js": "~0.8.26",
     "html-docx-js": "^0.3.1",
-    "html2canvas": "^0.5.0-beta4",
-    "jspdf": "^1.4.1",
-    "xlsx": "^0.14.0"
+    "html2pdf.js": "^0.9.1",
+    "rxjs": "~6.3.3",
+    "xlsx": "^0.14.0",
+    "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.10.0",

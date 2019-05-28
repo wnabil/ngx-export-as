@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { ExportAsConfig } from './export-as-config.model';
 
 import html2canvas from 'html2canvas';
-import * as jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import * as htmlDocx from 'html-docx-js/dist/html-docx';
+import html2pdf from 'html2pdf.js';
 
 window['html2canvas'] = html2canvas;
 
@@ -15,23 +15,42 @@ export class ExportAsService {
 
   constructor() { }
 
+  /**
+   * Main base64 get method, it will return the file as base64 string
+   * @param config your config
+   */
   get(config: ExportAsConfig): Observable<string | null> {
+    // structure method name dynamically by type
     const func = 'get' + config.type.toUpperCase();
+    // if type supported execute and return
     if (this[func]) {
       return this[func](config);
     }
 
+    // throw error for unsupported formats
     return Observable.create((observer) => { observer.error('Export type is not supported.'); });
   }
 
+  /**
+   * Save exported file in old javascript way
+   * @param config your custom config
+   * @param fileName Name of the file to be saved as
+   */
   save(config: ExportAsConfig, fileName: string): void {
+    // set download
     config.download = true;
+    // get file name with type
     config.fileName = fileName + '.' + config.type;
     this.get(config).subscribe();
   }
 
+  /**
+   * Converts content string to blob object
+   * @param content string to be converted
+   */
   contentToBlob(content: string): Observable<Blob> {
     return Observable.create((observer) => {
+      // get content string and extract mime type
       const arr = content.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]);
       let n = bstr.length;
@@ -44,50 +63,86 @@ export class ExportAsService {
     });
   }
 
+  /**
+   * Removes base64 file type from a string like "data:text/csv;base64,"
+   * @param fileContent the base64 string to remove the type from
+   */
   removeFileTypeFromBase64(fileContent: string): string {
     const re = /^data:[^]*;base64,/g;
     const newContent: string = re[Symbol.replace](fileContent, '');
     return newContent;
   }
 
+  /**
+   * Structure the base64 file content with the file type string
+   * @param fileContent file content
+   * @param fileMime file mime type "text/csv"
+   */
   addFileTypeToBase64(fileContent: string, fileMime: string): string {
     return `data:${fileMime};base64,${fileContent}`;
   }
 
+  /**
+   * create downloadable file from dataURL
+   * @param fileName downloadable file name
+   * @param dataURL file content as dataURL
+   */
   downloadFromDataURL(fileName: string, dataURL: string): void {
+    // create blob
     this.contentToBlob(dataURL).subscribe(blob => {
+      // download the blob
       this.downloadFromBlob(blob, fileName);
     });
   }
 
+  /**
+   * Downloads the blob object as a file
+   * @param blob file object as blob
+   * @param fileName downloadable file name
+   */
   downloadFromBlob(blob: Blob, fileName: string) {
+    // get object url
     const url = window.URL.createObjectURL(blob);
+    // check for microsoft internet explorer
     if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      // use IE download or open if the user using IE
       window.navigator.msSaveOrOpenBlob(blob, fileName);
     } else {
+      // if not using IE then create link element
       const element = document.createElement('a');
+      // set download attr with file name
       element.setAttribute('download', fileName);
+      // set the element as hidden
       element.style.display = 'none';
+      // append the body
       document.body.appendChild(element);
+      // set href attr
       element.href = url;
+      // click on it to start downloading
       element.click();
+      // remove the link from the dom
       document.body.removeChild(element);
     }
   }
 
   private getPDF(config: ExportAsConfig): Observable<string | null> {
     return Observable.create((observer) => {
-      const jspdf = new jsPDF();
+      if (!config.options) {
+        config.options = {};
+      }
+      config.options.filename = config.fileName;
       const element: HTMLElement = document.getElementById(config.elementId);
-      jspdf.addHTML(element, function () {
-        if (config.download) {
-          jspdf.save(config.fileName);
-          observer.next();
-        } else {
-          observer.next(jspdf.output('datauristring'));
-        }
+      const pdf = html2pdf().set(config.options).from(element, 'element');
+      if (config.download) {
+        pdf.save();
+        observer.next();
         observer.complete();
-      });
+      } else {
+        pdf.outputPdf('datauristring').then(data => {
+          observer.next(data);
+          observer.complete();
+        });
+      }
     });
   }
 
