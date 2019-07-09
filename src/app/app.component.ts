@@ -27,7 +27,9 @@ export class AppComponent {
     if (opt) {
       this.config.options.jsPDF.orientation = opt;
     }
-    this.exportAsService.save(this.config, 'myFile');
+    this.exportAsService.save(this.config, 'myFile').subscribe(() => {
+      // save started
+    });
     // this.exportAsService.get(this.config).subscribe(content => {
     //   console.log(content);
     // });
