@@ -36,12 +36,12 @@ export class ExportAsService {
    * @param config your custom config
    * @param fileName Name of the file to be saved as
    */
-  save(config: ExportAsConfig, fileName: string): void {
+  save(config: ExportAsConfig, fileName: string): Observable<string | null> {
     // set download
     config.download = true;
     // get file name with type
     config.fileName = fileName + '.' + config.type;
-    this.get(config).subscribe();
+    return this.get(config);
   }
 
   /**

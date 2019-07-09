@@ -86,7 +86,9 @@ export class AppComponent {
 ```javascript 
   function export() {
     // download the file using old school javascript method
-    this.exportAsService.save(this.exportAsConfig, 'My File Name');
+    this.exportAsService.save(this.exportAsConfig, 'My File Name').subscribe(() => {
+      // save started
+    });
     // get the data as base64 or json object for json type - this will be helpful in ionic or SSR
     this.exportAsService.get(this.config).subscribe(content => {
       console.log(content);
@@ -149,3 +151,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.2.4**
   - fix all pdf issues for html2canvas - #1, #3, #11
+
+- **1.2.6**
+  - Save method now will return a subscription, please make sure to trigger `.subscribe()`
