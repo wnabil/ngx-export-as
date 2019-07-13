@@ -26,7 +26,7 @@
     "@angular/platform-browser": "~8.1.1",
     "@angular/platform-browser-dynamic": "~8.1.1",
     "@angular/router": "~8.1.1",
-    "core-js": "^3.1.4",
+    "core-js": "^2.5.7",
     "html-docx-js": "^0.3.1",
     "html2pdf.js": "^0.9.1",
     "rxjs": "~6.5.2",
