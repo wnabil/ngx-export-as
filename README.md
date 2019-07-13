@@ -154,3 +154,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.2.6**
   - Save method now will return a subscription, please make sure to trigger `.subscribe()`
+
+- **1.3.0**
+  - Upgrade to Angular 8
