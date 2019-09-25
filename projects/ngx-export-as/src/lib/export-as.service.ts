@@ -133,8 +133,15 @@ export class ExportAsService {
       config.options.filename = config.fileName;
       const element: HTMLElement = document.getElementById(config.elementId);
       const pdf = html2pdf().set(config.options).from(element, 'element');
-      if (config.download) {
-        pdf.save();
+
+      const download = config.download;
+      const pdfCallbackFn = config.options.pdfCallbackFn;
+      if (download) {
+        if (pdfCallbackFn) {
+          this.applyPdfCallbackFn(pdf, pdfCallbackFn).save();
+        } else {
+          pdf.save();
+        }
         observer.next();
         observer.complete();
       } else {
@@ -143,6 +150,12 @@ export class ExportAsService {
           observer.complete();
         });
       }
+    });
+  }
+
+  private applyPdfCallbackFn(pdf, pdfCallbackFn) {
+    return pdf.toPdf().get('pdf').then((pdfRef) => {
+      pdfCallbackFn(pdfRef);
     });
   }
 
