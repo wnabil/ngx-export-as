@@ -145,10 +145,17 @@ export class ExportAsService {
         observer.next();
         observer.complete();
       } else {
-        pdf.outputPdf('datauristring').then(data => {
-          observer.next(data);
-          observer.complete();
-        });
+        if (pdfCallbackFn) {
+          this.applyPdfCallbackFn(pdf, pdfCallbackFn).outputPdf('datauristring').then(data => {
+            observer.next(data);
+            observer.complete();
+          });
+        } else {
+          pdf.outputPdf('datauristring').then(data => {
+            observer.next(data);
+            observer.complete();
+          });
+        }
       }
     });
   }

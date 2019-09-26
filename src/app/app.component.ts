@@ -32,6 +32,12 @@ export class AppComponent {
       // save started
     });
     // this.exportAsService.get(this.config).subscribe(content => {
+    //   const link = document.createElement('a');
+    //   const fileName = 'export.pdf';
+
+    //   link.href = content;
+    //   link.download = fileName;
+    //   link.click();
     //   console.log(content);
     // });
   }
