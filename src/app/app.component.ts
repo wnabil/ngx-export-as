@@ -14,7 +14,8 @@ export class AppComponent {
     options: {
       jsPDF: {
         orientation: 'landscape'
-      }
+      },
+      pdfCallbackFn: this.pdfCallbackFn // to add header and footer
     }
   };
 
@@ -31,8 +32,23 @@ export class AppComponent {
       // save started
     });
     // this.exportAsService.get(this.config).subscribe(content => {
+    //   const link = document.createElement('a');
+    //   const fileName = 'export.pdf';
+
+    //   link.href = content;
+    //   link.download = fileName;
+    //   link.click();
     //   console.log(content);
     // });
+  }
+
+  private pdfCallbackFn (pdf) {
+    // example to add page number as footer to every page of pdf
+    const noOfPages = pdf.internal.getNumberOfPages();
+    for (let i = 1; i <= noOfPages; i++) {
+      pdf.setPage(i);
+      pdf.text('Page ' + i + ' of ' + noOfPages, pdf.internal.pageSize.getWidth() - 100, pdf.internal.pageSize.getHeight() - 30);
+    }
   }
 
 }
