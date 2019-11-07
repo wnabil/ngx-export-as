@@ -42,7 +42,7 @@ export class AppComponent {
     // });
   }
 
-  private pdfCallbackFn (pdf) {
+  pdfCallbackFn (pdf: any) {
     // example to add page number as footer to every page of pdf
     const noOfPages = pdf.internal.getNumberOfPages();
     for (let i = 1; i <= noOfPages; i++) {
