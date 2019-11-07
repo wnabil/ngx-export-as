@@ -157,3 +157,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.3.0**
   - Upgrade to Angular 8
+
+- **1.3.1**
+  - Add support for PDF header, footer, page number and other possible actions before rendering - Thanks to Sreekanth2108 #35 fix #38
