@@ -10,7 +10,7 @@ export class AppComponent {
 
   config: ExportAsConfig = {
     type: 'pdf',
-    elementId: 'mytable',
+    elementIdOrContent: 'mytable',
     options: {
       jsPDF: {
         orientation: 'landscape'
@@ -22,6 +22,14 @@ export class AppComponent {
   constructor(
     private exportAsService: ExportAsService
   ) { }
+
+  exportAsString(type: SupportedExtensions, opt?: string) {
+    this.config.elementIdOrContent = '<div> test string </div>';
+    this.exportAs(type, opt);
+    setTimeout(() => {
+      this.config.elementIdOrContent = 'mytable';
+    }, 1000);
+  }
 
   exportAs(type: SupportedExtensions, opt?: string) {
     this.config.type = type;

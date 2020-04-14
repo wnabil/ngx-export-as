@@ -131,8 +131,8 @@ export class ExportAsService {
         config.options = {};
       }
       config.options.filename = config.fileName;
-      const element: HTMLElement = document.getElementById(config.elementId);
-      const pdf = html2pdf().set(config.options).from(element, 'element');
+      const element: HTMLElement = document.getElementById(config.elementIdOrContent);
+      const pdf = html2pdf().set(config.options).from(element ? element : config.elementIdOrContent);
 
       const download = config.download;
       const pdfCallbackFn = config.options.pdfCallbackFn;
@@ -168,7 +168,7 @@ export class ExportAsService {
 
   private getPNG(config: ExportAsConfig): Observable<string | null> {
     return Observable.create((observer) => {
-      const element: HTMLElement = document.getElementById(config.elementId);
+      const element: HTMLElement = document.getElementById(config.elementIdOrContent);
       html2canvas(element, config.options).then((canvas) => {
         const imgData = canvas.toDataURL('image/PNG');
         if (config.type === 'png' && config.download) {
@@ -186,7 +186,7 @@ export class ExportAsService {
 
   private getCSV(config: ExportAsConfig): Observable<string | null> {
     return Observable.create((observer) => {
-      const element: HTMLElement = document.getElementById(config.elementId);
+      const element: HTMLElement = document.getElementById(config.elementIdOrContent);
       const csv = [];
       const rows: any = element.querySelectorAll('table tr');
       for (let index = 0; index < rows.length; index++) {
@@ -219,7 +219,7 @@ export class ExportAsService {
   private getXLS(config: ExportAsConfig): Observable<string | null> {
     return Observable.create((observer) => {
 
-      const element: HTMLElement = document.getElementById(config.elementId);
+      const element: HTMLElement = document.getElementById(config.elementIdOrContent);
       const ws3 = XLSX.utils.table_to_sheet(element, config.options);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws3, config.fileName);
@@ -241,7 +241,7 @@ export class ExportAsService {
 
   // private getDOCX(config: ExportAsConfig): Observable<string | null> {
   //   return Observable.create((observer) => {
-  //     const contentDocument: string = document.getElementById(config.elementId).outerHTML;
+  //     const contentDocument: string = document.getElementById(config.elementIdOrContent).outerHTML;
   //     const content = '<!DOCTYPE html>' + contentDocument;
   //     const converted = htmlDocx.asBlob(content, config.options);
   //     if (config.download) {
@@ -268,7 +268,7 @@ export class ExportAsService {
     return Observable.create((observer) => {
       const data = []; // first row needs to be headers
       const headers = [];
-      const table = <HTMLTableElement>document.getElementById(config.elementId);
+      const table = <HTMLTableElement>document.getElementById(config.elementIdOrContent);
       for (let index = 0; index < table.rows[0].cells.length; index++) {
         headers[index] = table.rows[0].cells[index].innerHTML.toLowerCase().replace(/ /gi, '');
       }
@@ -296,7 +296,7 @@ export class ExportAsService {
   private getXML(config: ExportAsConfig): Observable<string | null> {
     return Observable.create((observer) => {
       let xml = '<?xml version="1.0" encoding="UTF-8"?><Root><Classes>';
-      const tritem = document.getElementById(config.elementId).getElementsByTagName('tr');
+      const tritem = document.getElementById(config.elementIdOrContent).getElementsByTagName('tr');
       for (let i = 0; i < tritem.length; i++) {
         const celldata = tritem[i];
         if (celldata.cells.length > 0) {

@@ -2,7 +2,7 @@ export type SupportedExtensions = 'pdf' | 'png' | 'xlsx' | 'xls' | 'docx' | 'doc
 
 export interface ExportAsConfig {
   type: SupportedExtensions;
-  elementId: string;
+  elementIdOrContent: string;
   download?: boolean;
   fileName?: string;
   options?: any;
