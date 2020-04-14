@@ -166,3 +166,7 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.4.1**
   - Update for Angular 9
+
+- **1.4.1**
+  - Fix #61 add support for any element type for pdf: available types now are string, element, canvas, img or element id
+
