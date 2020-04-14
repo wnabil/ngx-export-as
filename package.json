@@ -25,7 +25,7 @@
     "@angular/platform-browser": "~9.1.0",
     "@angular/platform-browser-dynamic": "~9.1.0",
     "@angular/router": "~9.1.0",
-    "core-js": "^2.5.7",
+    "core-js": "^3.6.5",
     "html-docx-js": "^0.3.1",
     "html2pdf.js": "^0.9.1",
     "rxjs": "~6.5.5",

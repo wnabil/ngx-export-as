@@ -163,3 +163,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.4.0**
   - Remove docx library as a temp solution for SSR builds, fix #21 - please use v1.3.1 until we have a new implementation for docx
+
+- **1.4.1**
+  - Update for Angular 9

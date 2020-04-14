@@ -180,5 +180,8 @@
       }
     }
   },
-  "defaultProject": "ngx-export-as-demo"
+  "defaultProject": "ngx-export-as-demo",
+  "cli": {
+    "analytics": false
+  }
 }
