@@ -17,8 +17,8 @@ A simple module to export the html or table elements to downloadable file.
 ## Used libraries "Useful for custom format options"
   - PNG - [HTML2Canvas](https://github.com/niklasvh/html2canvas/)
   - PDF - [HTML2PDF](https://github.com/eKoopmans/html2pdf.js)
-  - Microsoft Excel sheets - [html-docx-js](https://github.com/evidenceprime/html-docx-js)
-  - Microsoft Word documents - [SheetJS js-xlsx](https://github.com/SheetJS/js-xlsx)
+  - Microsoft Excel sheets - [SheetJS js-xlsx](https://github.com/SheetJS/js-xlsx)
+  - Microsoft Word documents - [html-docx-js](https://github.com/evidenceprime/html-docx-js) 
 
 ## Demo
  Running the demo:
