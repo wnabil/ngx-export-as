@@ -6,6 +6,7 @@
   "dependencies": {
     "html2pdf.js": "^0.9.1",
     "rxjs": "~6.3.3",
+    "tslib": "^2.0.0",
     "xlsx": "^0.14.0"
   },
   "peerDependencies": {

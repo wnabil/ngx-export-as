@@ -6,7 +6,7 @@ describe('NgxExportAsService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ExportAsService = TestBed.get(ExportAsService);
+    const service: ExportAsService = TestBed.inject(ExportAsService);
     expect(service).toBeTruthy();
   });
 });

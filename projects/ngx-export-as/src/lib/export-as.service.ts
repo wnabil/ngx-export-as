@@ -28,7 +28,7 @@ export class ExportAsService {
     }
 
     // throw error for unsupported formats
-    return Observable.create((observer) => { observer.error('Export type is not supported.'); });
+    return new Observable((observer) => { observer.error('Export type is not supported.'); });
   }
 
   /**
@@ -49,7 +49,7 @@ export class ExportAsService {
    * @param content string to be converted
    */
   contentToBlob(content: string): Observable<Blob> {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       // get content string and extract mime type
       const arr = content.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]);
@@ -126,7 +126,7 @@ export class ExportAsService {
   }
 
   private getPDF(config: ExportAsConfig): Observable<string | null> {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       if (!config.options) {
         config.options = {};
       }
@@ -167,7 +167,7 @@ export class ExportAsService {
   }
 
   private getPNG(config: ExportAsConfig): Observable<string | null> {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       const element: HTMLElement = document.getElementById(config.elementIdOrContent);
       html2canvas(element, config.options).then((canvas) => {
         const imgData = canvas.toDataURL('image/PNG');
@@ -185,7 +185,7 @@ export class ExportAsService {
   }
 
   private getCSV(config: ExportAsConfig): Observable<string | null> {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       const element: HTMLElement = document.getElementById(config.elementIdOrContent);
       const csv = [];
       const rows: any = element.querySelectorAll('table tr');
@@ -217,7 +217,7 @@ export class ExportAsService {
   }
 
   private getXLS(config: ExportAsConfig): Observable<string | null> {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
 
       const element: HTMLElement = document.getElementById(config.elementIdOrContent);
       const ws3 = XLSX.utils.table_to_sheet(element, config.options);
@@ -240,7 +240,7 @@ export class ExportAsService {
   }
 
   // private getDOCX(config: ExportAsConfig): Observable<string | null> {
-  //   return Observable.create((observer) => {
+  //   return new Observable((observer) => {
   //     const contentDocument: string = document.getElementById(config.elementIdOrContent).outerHTML;
   //     const content = '<!DOCTYPE html>' + contentDocument;
   //     const converted = htmlDocx.asBlob(content, config.options);
@@ -265,7 +265,7 @@ export class ExportAsService {
   // }
 
   private getJSON(config: ExportAsConfig): Observable<any[] | null> {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       const data = []; // first row needs to be headers
       const headers = [];
       const table = <HTMLTableElement>document.getElementById(config.elementIdOrContent);
@@ -294,7 +294,7 @@ export class ExportAsService {
   }
 
   private getXML(config: ExportAsConfig): Observable<string | null> {
-    return Observable.create((observer) => {
+    return new Observable((observer) => {
       let xml = '<?xml version="1.0" encoding="UTF-8"?><Root><Classes>';
       const tritem = document.getElementById(config.elementIdOrContent).getElementsByTagName('tr');
       for (let i = 0; i < tritem.length; i++) {
