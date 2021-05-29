@@ -172,3 +172,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.5.0**
   - Fix #84 Support for Angular 10, Thanks to kgish
+
+- **1.12.0**
+  - Upgrade for Angular 12

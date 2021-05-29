@@ -1,17 +1,18 @@
 {
   "name": "ngx-export-as",
-  "version": "1.5.0",
+  "version": "1.12.0",
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "html2pdf.js": "^0.9.1",
-    "rxjs": "~6.3.3",
-    "tslib": "^2.0.0",
-    "xlsx": "^0.14.0"
+    "html-to-docx": "^1.1.34",
+    "html2pdf.js": "^0.9.3",
+    "rxjs": "~7.1.0",
+    "tslib": "^2.2.0",
+    "xlsx": "^0.17.0"
   },
   "peerDependencies": {
-    "@angular/common": "^10.1.3",
-    "@angular/core": "^10.1.3"
+    "@angular/common": "^12.0.2",
+    "@angular/core": "^12.0.2"
   },
   "repository": {
     "type": "git",

@@ -5,9 +5,8 @@ import { ExportAsConfig } from './export-as-config.model';
 
 import html2canvas from 'html2canvas';
 import * as XLSX from 'xlsx';
-// import * as htmlDocx from 'html-docx-js/dist/html-docx';
+// import HTMLtoDOCX from 'html-to-docx';
 import html2pdf from 'html2pdf.js';
-
 window['html2canvas'] = html2canvas;
 
 @Injectable()
@@ -108,21 +107,25 @@ export class ExportAsService {
       // use IE download or open if the user using IE
       window.navigator.msSaveOrOpenBlob(blob, fileName);
     } else {
-      // if not using IE then create link element
-      const element = document.createElement('a');
-      // set download attr with file name
-      element.setAttribute('download', fileName);
-      // set the element as hidden
-      element.style.display = 'none';
-      // append the body
-      document.body.appendChild(element);
-      // set href attr
-      element.href = url;
-      // click on it to start downloading
-      element.click();
-      // remove the link from the dom
-      document.body.removeChild(element);
+      this.saveFile(fileName, url);
     }
+  }
+
+  private saveFile(fileName: string, url: string) {
+    // if not using IE then create link element
+    const element = document.createElement('a');
+    // set download attr with file name
+    element.setAttribute('download', fileName);
+    // set the element as hidden
+    element.style.display = 'none';
+    // append the body
+    document.body.appendChild(element);
+    // set href attr
+    element.href = url;
+    // click on it to start downloading
+    element.click();
+    // remove the link from the dom
+    document.body.removeChild(element);
   }
 
   private getPDF(config: ExportAsConfig): Observable<string | null> {
@@ -243,20 +246,22 @@ export class ExportAsService {
   //   return new Observable((observer) => {
   //     const contentDocument: string = document.getElementById(config.elementIdOrContent).outerHTML;
   //     const content = '<!DOCTYPE html>' + contentDocument;
-  //     const converted = htmlDocx.asBlob(content, config.options);
-  //     if (config.download) {
-  //       this.downloadFromBlob(converted, config.fileName);
-  //       observer.next();
-  //       observer.complete();
-  //     } else {
-  //       const reader = new FileReader();
-  //       reader.onloadend = () => {
-  //         const base64data = reader.result;
-  //         observer.next(base64data);
+  //     HTMLtoDOCX(content, null, config.options).then(converted => {
+  //       if (config.download) {
+  //         const blob = new Blob([converted]);
+  //         this.downloadFromBlob(converted, config.fileName);
+  //         observer.next();
   //         observer.complete();
-  //       };
-  //       reader.readAsDataURL(converted);
-  //     }
+  //       } else {
+  //         const reader = new FileReader();
+  //         reader.onloadend = () => {
+  //           const base64data = reader.result as string;
+  //           observer.next(base64data);
+  //           observer.complete();
+  //         };
+  //         reader.readAsDataURL(converted);
+  //       }
+  //     });
   //   });
   // }
 
