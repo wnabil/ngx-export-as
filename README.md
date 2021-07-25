@@ -10,7 +10,7 @@ A simple module to export the html or table elements to downloadable file.
   - CSV - .csv
   - Text - .txt
   - Microsoft Excel sheets - .xls, .xlsx
-  - Microsoft Word documents - .doc, .docx
+  - Microsoft Word documents - .doc, .docx "REQUIRES TARGET CONFIG es2015" [source issue](https://github.com/privateOmega/html-to-docx/issues/3#issuecomment-886222607)
   - JSON - .json
   - XML - .xml
 
@@ -175,3 +175,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.12.0**
   - Upgrade for Angular 12
+
+- **1.12.1**
+  - fix #76 Re-enable docx "project target es2015 is required"
