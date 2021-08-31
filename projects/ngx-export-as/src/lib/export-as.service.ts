@@ -198,7 +198,7 @@ export class ExportAsService {
         const cols = rowElement.querySelectorAll('td, th');
         for (let colIndex = 0; colIndex < cols.length; colIndex++) {
           const col = cols[colIndex];
-          row.push(col.innerText);
+          row.push('"'+col.innerText+'"');
         }
         csv.push(row.join(','));
       }
