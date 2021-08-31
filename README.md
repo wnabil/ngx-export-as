@@ -178,3 +178,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.12.1**
   - fix #76 Re-enable docx "project target es2015 is required"
+
+- **1.12.2**
+  - fix #97, fix csv comma, Thanks to souradeep07
