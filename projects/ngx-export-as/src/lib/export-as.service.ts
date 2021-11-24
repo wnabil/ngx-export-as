@@ -103,9 +103,9 @@ export class ExportAsService {
     // get object url
     const url = window.URL.createObjectURL(blob);
     // check for microsoft internet explorer
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+    if (window.navigator && window.navigator['msSaveOrOpenBlob']) {
       // use IE download or open if the user using IE
-      window.navigator.msSaveOrOpenBlob(blob, fileName);
+      window.navigator['msSaveOrOpenBlob'](blob, fileName);
     } else {
       this.saveFile(fileName, url);
     }

@@ -1,50 +1,29 @@
 <table id="mytable">
-  <thead>
-    <tr>
-      <th>Country</th>
-      <th>Population</th>
-      <th>Date</th>
-      <th>Age</th>
-      <th>REMARKS</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>مصر</td>
-      <td>1363480000</td>
-      <td>March 24 2014</td>
-      <td>19.1</td>
-      <td>₹</td>
-    </tr>
-    <tr>
-      <td>India</td>
-      <td>1241900000</td>
-      <td>March 24 2014</td>
-      <td>17.4</td>
-      <td>Remarks 2</td>
-    </tr>
-    <tr>
-      <td>United States</td>
-      <td>317746000</td>
-      <td>March 24 2014</td>
-      <td>4.44</td>
-      <td>Remarks 3</td>
-    </tr>
-    <tr>
-      <td>Indonesia</td>
-      <td>249866000</td>
-      <td>July 1 2013</td>
-      <td>3.49</td>
-      <td>Remarks 4</td>
-    </tr>
-    <tr>
-      <td>Brazil</td>
-      <td>201032714</td>
-      <td>July 1 2013</td>
-      <td>2.81</td>
-      <td>Remarks 5</td>
-    </tr>
-  </tbody>
+    <thead>
+        <tr>
+            <th>Country</th>
+            <th>Population</th>
+            <th>Date</th>
+            <th>Age</th>
+            <th>Temp</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>مصر</td>
+            <td>1363480000</td>
+            <td>March 24 2014</td>
+            <td>19.1</td>
+            <td>₹</td>
+        </tr>
+        <tr *ngFor="let i of rows">
+            <td>Syria</td>
+            <td>0000000</td>
+            <td>March 24 2014</td>
+            <td>11</td>
+            <td>{{ i }}</td>
+        </tr>
+    </tbody>
 </table>
 <button (click)="exportAsString('pdf', 'portrait')">From String</button>
 <button (click)="exportAs('pdf', 'portrait')">export as pdf</button>

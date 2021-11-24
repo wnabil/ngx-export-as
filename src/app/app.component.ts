@@ -7,6 +7,7 @@ import { ExportAsService, ExportAsConfig, SupportedExtensions } from 'ngx-export
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  rows = Array(20).fill(0).map((x, i) => i);
 
   config: ExportAsConfig = {
     type: 'pdf',

@@ -174,10 +174,13 @@ const exportAsConfig: ExportAsConfig = {
   - Fix #84 Support for Angular 10, Thanks to kgish
 
 - **1.12.0**
-  - Upgrade for Angular 12
+  - Upgrade to Angular 12
 
 - **1.12.1**
   - fix #76 Re-enable docx "project target es2015 is required"
 
 - **1.12.2**
   - fix #97, fix csv comma, Thanks to souradeep07
+
+- **1.13.0**
+  - fix #102, Upgrade to Angular 13
