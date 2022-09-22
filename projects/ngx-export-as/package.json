@@ -1,18 +1,18 @@
 {
   "name": "ngx-export-as",
-  "version": "1.13.0",
+  "version": "1.14.0",
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "html-to-docx": "^1.2.4",
+    "html-to-docx": "^1.4.0",
     "html2pdf.js": "^0.10.1",
-    "rxjs": "~7.4.0",
-    "tslib": "^2.3.1",
-    "xlsx": "^0.17.4"
+    "xlsx": "^0.18.5",
+    "rxjs": "~7.5.6",
+    "tslib": "^2.4.0"
   },
   "peerDependencies": {
-    "@angular/common": "^13.0.2",
-    "@angular/core": "^13.0.2"
+    "@angular/common": "^14.2.3",
+    "@angular/core": "^14.2.3"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "xlsx",
     "csv"
   ],
-  "author": "Wassem Nabil <w.nabil@orangestudio.com> (http://arabianlolers.com)",
+  "author": "Wassem Nabil <w.nabil@orangestudio.com> (https://qapas.com)",
   "bugs": {
     "url": "https://github.com/wnabil/ngx-export-as/issues"
   },
