@@ -188,3 +188,6 @@ const exportAsConfig: ExportAsConfig = {
 - **1.14.1**
   - fix #109, Angular 14
   - DOCX is not supported [check this issue](https://github.com/privateOmega/html-to-docx/issues/145)
+
+- **1.15.0**
+  - fix #110, Support for Angular 15, Thanks to MuhAssar
