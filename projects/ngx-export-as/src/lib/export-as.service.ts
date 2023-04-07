@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ExportAsConfig } from './export-as-config.model';
@@ -7,12 +7,18 @@ import html2canvas from 'html2canvas';
 import * as XLSX from 'xlsx';
 // import HTMLtoDOCX from 'html-to-docx';
 import html2pdf from 'html2pdf.js';
-window['html2canvas'] = html2canvas;
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable()
 export class ExportAsService {
 
-  constructor() { }
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object;
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      window['html2canvas'] = html2canvas;
+    }
+   }
 
   /**
    * Main base64 get method, it will return the file as base64 string
