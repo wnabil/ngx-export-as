@@ -13,7 +13,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class ExportAsService {
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object;
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     if (isPlatformBrowser(this.platformId)) {
       window['html2canvas'] = html2canvas;

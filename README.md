@@ -191,3 +191,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.15.0**
   - fix #110, Support for Angular 15, Thanks to MuhAssar
+
+- **1.15.1**
+  - fix PR #112, html2canvas SSR fix, Thanks to enea4science
