@@ -194,3 +194,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.15.1**
   - fix PR #112, html2canvas SSR fix, Thanks to enea4science
+
+- **1.16.0**
+  - Angular 16
