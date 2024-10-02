@@ -197,3 +197,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.16.0**
   - Angular 16
+
+- **1.17.0**
+  - Angular 17 PR #114, thanks to MuhAssar
