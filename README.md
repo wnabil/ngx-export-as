@@ -203,3 +203,6 @@ const exportAsConfig: ExportAsConfig = {
 
 - **1.18.0**
   - Angular 18 PR #115, thanks to AileThrowmountain
+
+- **1.19.0**
+  - Angular 19 PR #116, thanks to ralphinevanbraak
