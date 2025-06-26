@@ -8,21 +8,31 @@ A simple module to export the html or table elements to downloadable file.
 
 ## Supported Formats
 
--Image - .png
--PDF - .pdf
--CSV - .csv
--Text - .txt
--Microsoft Excel sheets - .xls, .xlsx
--Microsoft Word documents - .doc, .docx "REQUIRES TARGET CONFIG es2015" [source issue](https://github.com/privateOmega/html-to-docx/issues/3#issuecomment-886222607)
--JSON - .json
--XML - .xml
+- Image - .png
+
+- PDF - .pdf
+
+- CSV - .csv
+
+- Text - .txt
+
+- Microsoft Excel sheets - .xls, .xlsx
+
+- Microsoft Word documents - .doc, .docx "REQUIRES TARGET CONFIG es2015" [source issue](https://github.com/privateOmega/html-to-docx/issues/3#issuecomment-886222607)
+
+- JSON - .json
+
+- XML - .xml
 
 ## Used libraries "Useful for custom format options"
 
--PNG - [HTML2Canvas](https://github.com/niklasvh/html2canvas/)
--PDF - [HTML2PDF](https://github.com/eKoopmans/html2pdf.js)
--Microsoft Excel sheets - [SheetJS js-xlsx](https://github.com/SheetJS/js-xlsx)
--Microsoft Word documents - [html-docx-js](https://github.com/evidenceprime/html-docx-js)
+- PNG - [HTML2Canvas](https://github.com/niklasvh/html2canvas/)
+
+- PDF - [HTML2PDF](https://github.com/eKoopmans/html2pdf.js)
+
+- Microsoft Excel sheets - [SheetJS js-xlsx](https://github.com/SheetJS/js-xlsx)
+
+- Microsoft Word documents - [html-docx-js](https://github.com/evidenceprime/html-docx-js)
 
 ## Demo
 
@@ -106,8 +116,11 @@ export class AppComponent {
 
 ## IE Users
 
--For Microsoft Internet Explorer this library requires many polyfills, please enable all BROWSER POLYFILLS. -[typedarray](https://github.com/inexorabletash/polyfill/blob/master/typedarray.js) Custom polyfill is also required.
--Please refere to `polyfills.ts` demo
+- For Microsoft Internet Explorer this library requires many polyfills, please enable all BROWSER POLYFILLS.
+
+- [typedarray](https://github.com/inexorabletash/polyfill/blob/master/typedarray.js) Custom polyfill is also required.
+
+- Please refere to `polyfills.ts` demo
 
 ## Contribution, Ideas and pull requests are welcome, Please open an issue on Github or contact me on <breakersniper@gmail.com> if i didn't response in approx 2 days
 
@@ -133,8 +146,9 @@ const exportAsConfig: ExportAsConfig = {
 
 ## Important Notes
 
--Json type get method will return the data in json object format not as base64
--Not all the libraries supports the html element, for example the json and xlsx formats required the element to be an HTML Table
+- Json type get method will return the data in json object format not as base64
+
+- Not all the libraries supports the html element, for example the json and xlsx formats required the element to be an HTML Table
 
 ### Change Logs
 
