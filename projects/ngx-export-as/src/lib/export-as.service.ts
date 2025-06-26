@@ -151,7 +151,7 @@ export class ExportAsService {
         } else {
           pdf.save();
         }
-        observer.next();
+        observer.next(null);
         observer.complete();
       } else {
         if (pdfCallbackFn) {
@@ -182,7 +182,7 @@ export class ExportAsService {
         const imgData = canvas.toDataURL('image/PNG');
         if (config.type === 'png' && config.download) {
           this.downloadFromDataURL(config.fileName, imgData);
-          observer.next();
+          observer.next(null);
         } else {
           observer.next(imgData);
         }
@@ -211,7 +211,7 @@ export class ExportAsService {
       const csvContent = 'data:text/csv;base64,' + this.btoa(csv.join('\n'));
       if (config.download) {
         this.downloadFromDataURL(config.fileName, csvContent);
-        observer.next();
+        observer.next(null);
       } else {
         observer.next(csvContent);
       }
@@ -236,7 +236,7 @@ export class ExportAsService {
       const xlsContent = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + out;
       if (config.download) {
         this.downloadFromDataURL(config.fileName, xlsContent);
-        observer.next();
+        observer.next(null);
       } else {
         observer.next(xlsContent);
       }
@@ -295,7 +295,7 @@ export class ExportAsService {
       const dataStr = 'data:text/json;base64,' + jsonBase64;
       if (config.download) {
         this.downloadFromDataURL(config.fileName, dataStr);
-        observer.next();
+        observer.next(null);
       } else {
         observer.next(data);
       }
@@ -321,7 +321,7 @@ export class ExportAsService {
       const base64 = 'data:text/xml;base64,' + this.btoa(xml);
       if (config.download) {
         this.downloadFromDataURL(config.fileName, base64);
-        observer.next();
+        observer.next(null);
       } else {
         observer.next(base64);
       }
