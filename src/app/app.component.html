@@ -1,29 +1,31 @@
 <table id="mytable">
-    <thead>
-        <tr>
-            <th>Country</th>
-            <th>Population</th>
-            <th>Date</th>
-            <th>Age</th>
-            <th>Temp</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>مصر</td>
-            <td>1363480000</td>
-            <td>March 24 2014</td>
-            <td>19.1</td>
-            <td>₹</td>
-        </tr>
-        <tr *ngFor="let i of rows">
-            <td>Syria</td>
-            <td>0000000</td>
-            <td>March 24 2014</td>
-            <td>11</td>
-            <td>{{ i }}</td>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th>Country</th>
+      <th>Population</th>
+      <th>Date</th>
+      <th>Age</th>
+      <th>Temp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>مصر</td>
+      <td>1363480000</td>
+      <td>March 24 2014</td>
+      <td>19.1</td>
+      <td>₹</td>
+    </tr>
+    @for(i of rows; track i) {
+    <tr>
+      <td>Syria</td>
+      <td>0000000</td>
+      <td>March 24 2014</td>
+      <td>11</td>
+      <td>{{ i }}</td>
+    </tr>
+    }
+  </tbody>
 </table>
 <button (click)="exportAsString('pdf', 'portrait')">From String</button>
 <button (click)="exportAs('pdf', 'portrait')">export as pdf</button>

@@ -18,22 +18,43 @@ import { isPlatformBrowser } from '@angular/common';
  * 
  * Supports both browser download and base64 content retrieval for further processing.
  * 
+ * **As of v1.21.0:** This is a standalone service - no NgModule required.
+ * Provide it directly in your component or app.config.ts.
+ * 
  * @export
  * @class ExportAsService
  * 
  * @example
  * ```typescript
- * constructor(private exportAsService: ExportAsService) {}
+ * // Standalone Component (Recommended)
+ * import { Component, inject } from '@angular/core';
  * 
- * exportToPDF() {
- *   const config: ExportAsConfig = {
- *     type: 'pdf',
- *     elementIdOrContent: 'tableId'
- *   };
- *   this.exportAsService.save(config, 'my-export').subscribe(() => {
- *     console.log('Export completed');
- *   });
+ * @Component({
+ *   selector: 'app-export',
+ *   standalone: true,
+ *   providers: [ExportAsService]
+ * })
+ * export class ExportComponent {
+ *   private readonly exportAsService = inject(ExportAsService);
+ * 
+ *   exportToPDF() {
+ *     const config: ExportAsConfig = {
+ *       type: 'pdf',
+ *       elementIdOrContent: 'tableId'
+ *     };
+ *     this.exportAsService.save(config, 'my-export').subscribe(() => {
+ *       console.log('Export completed');
+ *     });
+ *   }
  * }
+ * ```
+ * 
+ * @example
+ * ```typescript
+ * // App-wide provider (app.config.ts)
+ * export const appConfig: ApplicationConfig = {
+ *   providers: [ExportAsService]
+ * };
  * ```
  */
 @Injectable()
@@ -104,15 +125,19 @@ export class ExportAsService {
    * 
    * @example
    * ```typescript
-   * const config: ExportAsConfig = {
-   *   type: 'xlsx',
-   *   elementIdOrContent: 'dataTable',
-   *   options: { /* SheetJS options *\/ }
-   * };
+   * private readonly exportAsService = inject(ExportAsService);
    * 
-   * this.exportAsService.save(config, 'quarterly-report').subscribe(() => {
-   *   console.log('Download started');
-   * });
+   * downloadReport() {
+   *   const config: ExportAsConfig = {
+   *     type: 'xlsx',
+   *     elementIdOrContent: 'dataTable',
+   *     options: { /* SheetJS options *\/ }
+   *   };
+   *   
+   *   this.exportAsService.save(config, 'quarterly-report').subscribe(() => {
+   *     console.log('Download started');
+   *   });
+   * }
    * ```
    * 
    * @memberof ExportAsService
@@ -137,10 +162,14 @@ export class ExportAsService {
    * 
    * @example
    * ```typescript
-   * const dataUrl = 'data:image/png;base64,iVBORw0KGgo...';
-   * this.exportAsService.contentToBlob(dataUrl).subscribe(blob => {
-   *   console.log('Blob size:', blob.size);
-   * });
+   * private readonly exportAsService = inject(ExportAsService);
+   * 
+   * convertToBlob() {
+   *   const dataUrl = 'data:image/png;base64,iVBORw0KGgo...';
+   *   this.exportAsService.contentToBlob(dataUrl).subscribe(blob => {
+   *     console.log('Blob size:', blob.size);
+   *   });
+   * }
    * ```
    * 
    * @memberof ExportAsService

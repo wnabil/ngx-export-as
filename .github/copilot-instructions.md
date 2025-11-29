@@ -4,13 +4,16 @@
 
 This is an **Angular library** (not an app) that exports HTML/table elements to multiple file formats (PDF, PNG, Excel, Word, CSV, JSON, XML). The project uses a **monorepo structure** with the library in `projects/ngx-export-as/` and a demo app in `src/` for testing.
 
+**As of v1.21.0:** The library is fully standalone - no NgModule required. Users provide `ExportAsService` directly in components or app.config.ts.
+
 ## Architecture
 
 ### Library Structure (projects/ngx-export-as/)
-- **Public API**: `src/public_api.ts` - Single entry point exporting: `ExportAsService`, `ExportAsConfig`, `ExportAsModule`
+- **Public API**: `src/public_api.ts` - Single entry point exporting: `ExportAsService`, `ExportAsConfig`
 - **Service**: `export-as.service.ts` - Core service with private methods per format (`getPDF()`, `getPNG()`, `getXLS()`, etc.)
 - **Configuration**: `export-as-config.model.ts` - Type-safe config interface with `SupportedExtensions` union type
-- **Module**: `export-as.module.ts` - Provides `ExportAsService` globally
+
+> **Note:** As of v1.21.0, the library is fully standalone. No NgModule required - provide `ExportAsService` directly in components or app.config.ts
 
 ### Key Design Patterns
 
@@ -94,18 +97,32 @@ ng serve                   # Run demo at localhost:4200
 
 ### Example Usage (see src/app/app.component.ts)
 ```typescript
-config: ExportAsConfig = {
-  type: 'pdf',
-  elementIdOrContent: 'mytable',
-  options: {
-    jsPDF: { orientation: 'landscape' },
-    pdfCallbackFn: this.pdfCallbackFn  // Add headers/footers
-  }
-};
+import { Component, inject } from '@angular/core';
+import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
 
-this.exportAsService.save(config, 'myFile').subscribe(() => {
-  // Download started
-});
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  providers: [ExportAsService]  // Provide service in component
+})
+export class AppComponent {
+  private readonly exportAsService = inject(ExportAsService);
+  
+  config: ExportAsConfig = {
+    type: 'pdf',
+    elementIdOrContent: 'mytable',
+    options: {
+      jsPDF: { orientation: 'landscape' },
+      pdfCallbackFn: this.pdfCallbackFn  // Add headers/footers
+    }
+  };
+
+  export() {
+    this.exportAsService.save(this.config, 'myFile').subscribe(() => {
+      // Download started
+    });
+  }
+}
 ```
 
 ## JSDoc Standards
@@ -147,8 +164,19 @@ Private methods use same standard but include `@private` tag.
 
 ## Version Support
 
-Currently supports Angular 20+ (see package.json peerDependencies). Major version updates require:
+Currently supports Angular 21+ (see package.json peerDependencies). Major version updates require:
 1. Update `peerDependencies` in `projects/ngx-export-as/package.json`
 2. Update root `package.json` devDependencies
 3. Test all export formats in demo app
-4. Update README changelog section
+4. Update README and CHANGELOG.md
+
+## Migration from v1.20.x to v1.21.0
+
+**Breaking Change:** NgModule has been removed. Users must:
+1. Remove `ExportAsModule` from imports
+2. Import `inject` from `@angular/core`
+3. Provide `ExportAsService` in one of three ways:
+   - Component-level: Add to `providers` array in standalone component
+   - App-level: Add to `providers` in `app.config.ts`
+   - Legacy: Add to `providers` in NgModule (for module-based apps)
+4. Use modern `inject()` function instead of constructor injection

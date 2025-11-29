@@ -5,7 +5,7 @@
 
 > **Angular service for exporting HTML/Table elements to multiple file formats**
 
-A powerful and flexible Angular library that enables exporting HTML content, tables, and DOM elements to various file formats including PDF, Excel, Word, images, and more. Built with TypeScript and fully compatible with Angular 20+ and Ionic.
+A powerful and flexible Angular library that enables exporting HTML content, tables, and DOM elements to various file formats including PDF, Excel, Word, images, and more. Built with TypeScript and fully compatible with Angular 21+ and Ionic.
 
 ---
 
@@ -15,14 +15,18 @@ A powerful and flexible Angular library that enables exporting HTML content, tab
 - [Supported Formats](#-supported-formats)
 - [Installation](#-installation)
 - [Quick Start](#-quick-start)
+  - [Option 1: Standalone Component](#option-1-standalone-component-recommended)
+  - [Option 2: App-Wide Provider](#option-2-app-wide-provider-appconfigts)
+  - [Option 3: Legacy NgModule](#option-3-legacy-ngmodule-for-older-projects)
 - [Usage Examples](#-usage-examples)
 - [Configuration](#-configuration)
 - [Format-Specific Options](#-format-specific-options)
 - [Browser Support](#-browser-support)
 - [Demo](#-demo)
 - [Dependencies](#-dependencies)
+- [Migration Guide (v1.20 → v1.21)](#-migration-guide-v120x--v1210)
+- [Important Notes](#-important-notes)
 - [Contributing](#-contributing)
-- [Changelog](#-changelog)
 - [License](#-license)
 
 ---
@@ -34,6 +38,7 @@ A powerful and flexible Angular library that enables exporting HTML content, tab
 - 🎨 **Customizable** - Extensive options for each export format
 - 🚀 **Lightweight** - Minimal dependencies and optimized bundle size
 - 🔧 **TypeScript** - Full type safety and IntelliSense support
+- ⚡ **Standalone-First** - Modern Angular architecture (v1.21.0+)
 - 🌐 **SSR Compatible** - Server-side rendering support with platform checks
 - 📱 **Ionic Ready** - Works seamlessly with Ionic applications
 - 🎪 **Two Export Modes** - Download files or retrieve base64 content
@@ -82,34 +87,85 @@ pnpm add ngx-export-as
 
 ## 🚀 Quick Start
 
-### 1. Import the Module
+> **⚠️ Breaking Change in v1.21.0:** `ExportAsModule` has been removed. The library now uses standalone components. See migration examples below.
 
-Add `ExportAsModule` to your application module:
+### Option 1: Standalone Component (Recommended)
+
+Provide `ExportAsService` directly in your standalone component using modern `inject()`:
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
+
+@Component({
+  selector: 'app-export',
+  templateUrl: './export.component.html',
+  standalone: true,
+  providers: [ExportAsService]  // Provide service in component
+})
+export class ExportComponent {
+  private readonly exportAsService = inject(ExportAsService);
+  
+  // Your export methods here
+}
+```
+
+### Option 2: App-Wide Provider (app.config.ts)
+
+For using the service across multiple components, provide it globally in `app.config.ts`:
+
+```typescript
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ExportAsService } from 'ngx-export-as';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    ExportAsService  // Available throughout the app
+  ]
+};
+```
+
+Then use it in any component:
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
+
+@Component({
+  selector: 'app-export',
+  templateUrl: './export.component.html',
+  standalone: true
+  // No need to provide service here - already in app.config
+})
+export class ExportComponent {
+  private readonly exportAsService = inject(ExportAsService);
+}
+```
+
+### Option 3: Legacy NgModule (For Older Projects)
+
+If you're still using NgModule-based architecture:
 
 ```typescript
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ExportAsModule } from 'ngx-export-as';
-
+import { ExportAsService } from 'ngx-export-as';
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    ExportAsModule  // Add ExportAsModule here
-  ],
+  imports: [BrowserModule],
+  providers: [ExportAsService],  // Add service to providers
   bootstrap: [AppComponent]
 })
 export class AppModule { }
 ```
 
-### 2. Inject the Service
-
-Import and inject `ExportAsService` in your component:
+Then inject in your component:
 
 ```typescript
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
 
 @Component({
@@ -117,14 +173,11 @@ import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
   templateUrl: './export.component.html'
 })
 export class ExportComponent {
-  
-  constructor(private exportAsService: ExportAsService) { }
-  
-  // Your export methods here
+  private readonly exportAsService = inject(ExportAsService);
 }
 ```
 
-### 3. Add HTML Element
+### 2. Add HTML Element and Export Method
 
 Create an HTML element with an ID to export:
 
@@ -147,8 +200,6 @@ Create an HTML element with an ID to export:
 
 <button (click)="exportAsPDF()">Export as PDF</button>
 ```
-
-### 4. Export the Content
 
 Implement the export method:
 
@@ -174,11 +225,16 @@ exportAsPDF() {
 Export and automatically download the file:
 
 ```typescript
+import { Component, inject } from '@angular/core';
 import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
 
+@Component({
+  selector: 'app-export',
+  standalone: true,
+  providers: [ExportAsService]
+})
 export class ExportComponent {
-  
-  constructor(private exportAsService: ExportAsService) { }
+  private readonly exportAsService = inject(ExportAsService);
   
   exportToPDF() {
     const config: ExportAsConfig = {
@@ -535,6 +591,71 @@ This library uses the following open-source projects:
 
 ---
 
+## 🔄 Migration Guide (v1.20.x → v1.21.0)
+
+### Breaking Changes
+
+Version 1.21.0 removes the `ExportAsModule` in favor of Angular's modern standalone architecture.
+
+#### What Changed
+- ❌ **Removed:** `ExportAsModule` (no longer exported from the library)
+- ✅ **New:** Direct service provision in components or `app.config.ts`
+
+#### Migration Steps
+
+**Before (v1.20.x):**
+```typescript
+// app.module.ts
+import { ExportAsModule } from 'ngx-export-as';
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    ExportAsModule  // ❌ No longer available
+  ]
+})
+export class AppModule { }
+```
+
+**After (v1.21.0) - Option 1: Standalone Component**
+```typescript
+import { Component } from '@angular/core';
+import { ExportAsService } from 'ngx-export-as';
+
+@Component({
+  selector: 'app-export',
+  standalone: true,
+  providers: [ExportAsService]  // ✅ Provide directly
+})
+export class ExportComponent {
+  private readonly exportAsService = inject(ExportAsService);
+}
+```
+
+**After (v1.21.0) - Option 2: App Config**
+```typescript
+// app.config.ts
+import { ExportAsService } from 'ngx-export-as';
+
+export const appConfig: ApplicationConfig = {
+  providers: [ExportAsService]  // ✅ App-wide provider
+};
+```
+
+**After (v1.21.0) - Option 3: NgModule (Legacy)**
+```typescript
+// app.module.ts
+import { ExportAsService } from 'ngx-export-as';
+
+@NgModule({
+  imports: [BrowserModule],
+  providers: [ExportAsService]  // ✅ Add to providers instead
+})
+export class AppModule { }
+```
+
+---
+
 ## 📝 Important Notes
 
 ### Format-Specific Requirements
@@ -636,132 +757,6 @@ npm run package
 
 ---
 
-## 📜 Changelog
-
-### Version 1.20.x (2024-2025)
-
-#### v1.20.1 (Current)
-- 🔧 Maintenance updates for Angular 20
-
-#### v1.20.0
-- ⬆️ **Angular 20 Support** - PR [#118](https://github.com/wnabil/ngx-export-as/pull/118) by [@jhoglin](https://github.com/jhoglin)
-
-### Version 1.19.x
-
-#### v1.19.0
-- ⬆️ **Angular 19 Support** - PR [#116](https://github.com/wnabil/ngx-export-as/pull/116) by [@ralphinevanbraak](https://github.com/ralphinevanbraak)
-
-### Version 1.18.x
-
-#### v1.18.0
-- ⬆️ **Angular 18 Support** - PR [#115](https://github.com/wnabil/ngx-export-as/pull/115) by [@AileThrowmountain](https://github.com/AileThrowmountain)
-
-### Version 1.17.x
-
-#### v1.17.0
-- ⬆️ **Angular 17 Support** - PR [#114](https://github.com/wnabil/ngx-export-as/pull/114) by [@MuhAssar](https://github.com/MuhAssar)
-
-### Version 1.16.x
-
-#### v1.16.0
-- ⬆️ **Angular 16 Support**
-
-### Version 1.15.x
-
-#### v1.15.1
-- 🐛 **Fix:** html2canvas SSR compatibility - PR [#112](https://github.com/wnabil/ngx-export-as/pull/112) by [@enea4science](https://github.com/enea4science)
-
-#### v1.15.0
-- ⬆️ **Angular 15 Support** - Issue [#110](https://github.com/wnabil/ngx-export-as/issues/110) by [@MuhAssar](https://github.com/MuhAssar)
-
-### Version 1.14.x
-
-#### v1.14.1
-- ⬆️ **Angular 14 Support** - Issue [#109](https://github.com/wnabil/ngx-export-as/issues/109)
-- ⚠️ **Note:** DOCX temporarily not supported - [Related Issue](https://github.com/privateOmega/html-to-docx/issues/145)
-
-### Version 1.13.x
-
-#### v1.13.0
-- ⬆️ **Angular 13 Support** - Issue [#102](https://github.com/wnabil/ngx-export-as/issues/102)
-
-### Version 1.12.x
-
-#### v1.12.2
-- 🐛 **Fix:** CSV comma handling - Issue [#97](https://github.com/wnabil/ngx-export-as/issues/97) by [@souradeep07](https://github.com/souradeep07)
-
-#### v1.12.1
-- ✨ **Feature:** Re-enabled DOCX support - Issue [#76](https://github.com/wnabil/ngx-export-as/issues/76)
-- ⚠️ **Requires:** TypeScript target `es2015` or higher
-
-#### v1.12.0
-- ⬆️ **Angular 12 Support**
-
-### Version 1.5.x
-
-#### v1.5.0
-- ⬆️ **Angular 10 Support** - Issue [#84](https://github.com/wnabil/ngx-export-as/issues/84) by [@kgish](https://github.com/kgish)
-
-### Version 1.4.x
-
-#### v1.4.2
-- ✨ **Feature:** PDF now supports multiple element types - Issue [#61](https://github.com/wnabil/ngx-export-as/issues/61)
-  - Accepts: string, HTMLElement, Canvas, Image, or element ID
-
-#### v1.4.1
-- ⬆️ **Angular 9 Support**
-
-#### v1.4.0
-- 🐛 **Fix:** SSR builds - Issue [#21](https://github.com/wnabil/ngx-export-as/issues/21)
-- ⚠️ **Temporary:** DOCX support removed (restored in v1.12.1)
-
-### Version 1.3.x
-
-#### v1.3.1
-- ✨ **Feature:** PDF callback function support - Issue [#38](https://github.com/wnabil/ngx-export-as/issues/38), PR [#35](https://github.com/wnabil/ngx-export-as/pull/35) by [@Sreekanth2108](https://github.com/Sreekanth2108)
-  - Add custom headers, footers, page numbers before rendering
-
-#### v1.3.0
-- ⬆️ **Angular 8 Support**
-
-### Version 1.2.x
-
-#### v1.2.6
-- 🔄 **Breaking:** `save()` method now returns Observable
-  - **Migration:** Add `.subscribe()` to all `save()` calls
-
-#### v1.2.4
-- 🐛 **Fix:** All PDF html2canvas issues - Issues [#1](https://github.com/wnabil/ngx-export-as/issues/1), [#3](https://github.com/wnabil/ngx-export-as/issues/3), [#11](https://github.com/wnabil/ngx-export-as/issues/11)
-
-#### v1.2.3
-- 🐛 **Fix:** Internet Explorer support - Issue [#12](https://github.com/wnabil/ngx-export-as/issues/12)
-- 🐛 **Fix:** Special language characters - Issue [#16](https://github.com/wnabil/ngx-export-as/issues/16)
-- ⬆️ **Support:** Angular 4 and 5 - Issue [#15](https://github.com/wnabil/ngx-export-as/issues/15)
-- 📝 **Docs:** Updated README - Issue [#9](https://github.com/wnabil/ngx-export-as/issues/9)
-
-#### v1.2.2
-- 📝 **Docs:** Fixed README and license
-
-#### v1.2.0
-- 🔄 **Migration:** Switched to Angular library format with ng-packagr
-
-### Version 1.1.x
-
-#### v1.1.1
-- 🐛 **Fix:** Issue [#5](https://github.com/wnabil/ngx-export-as/issues/5)
-
-#### v1.1.0
-- ⬆️ **Angular 6 Support**
-
-### Version 1.0.x
-
-#### v1.0.0
-- 🎉 **Initial Release**
-- ✨ All export methods implemented
-- 📄 Support for PDF, PNG, XLS, XLSX, CSV, TXT, JSON, XML
-
----
-
 ## 📄 License
 
 This project is licensed under the **MIT License**.
@@ -816,6 +811,8 @@ And to all users who reported issues and provided feedback!
 - **NPM Package:** [ngx-export-as](https://www.npmjs.com/package/ngx-export-as)
 - **GitHub Repository:** [wnabil/ngx-export-as](https://github.com/wnabil/ngx-export-as)
 - **Issue Tracker:** [GitHub Issues](https://github.com/wnabil/ngx-export-as/issues)
+- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+- **Migration Guide:** [MIGRATION.md](MIGRATION.md) - v1.20.x → v1.21.0
 - **Author:** [Wassem Nabil](https://github.com/wnabil)
 - **Website:** [qapas.com](https://qapas.com)
 

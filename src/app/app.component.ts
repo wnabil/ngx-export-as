@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ExportAsService, ExportAsConfig, SupportedExtensions } from 'ngx-export-as';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  providers: [ExportAsService]
 })
 export class AppComponent {
+  private readonly exportAsService = inject(ExportAsService);
+
   rows = Array(20).fill(0).map((x, i) => i);
 
   config: ExportAsConfig = {
@@ -20,10 +23,6 @@ export class AppComponent {
       pdfCallbackFn: this.pdfCallbackFn // to add header and footer
     }
   };
-
-  constructor(
-    private exportAsService: ExportAsService
-  ) { }
 
   exportAsString(type: SupportedExtensions, opt?: string) {
     this.config.elementIdOrContent = '<div> test string </div>';
