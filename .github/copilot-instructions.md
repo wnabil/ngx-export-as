@@ -140,10 +140,12 @@ Private methods use same standard but include `@private` tag.
 
 | Format | Library | Version | Notes |
 |--------|---------|---------|-------|
-| PDF | html2pdf.js | ^0.10.1 | Wraps html2canvas + jsPDF |
+| PDF | html2pdf.js | ^0.12.1 | Wraps html2canvas + jsPDF |
 | PNG | html2canvas | ^1.4.1 | Assigned to `window['html2canvas']` |
-| Excel | xlsx (SheetJS) | ^0.18.5 | Table to workbook conversion |
+| Excel | xlsx (SheetJS CE) | 0.20.3 | Table to workbook conversion - from CDN |
 | Word | html-to-docx | - | Currently disabled |
+
+**SheetJS Note**: The library uses SheetJS Community Edition 0.20.3 from the official CDN (`https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`) instead of the outdated npm registry version. This resolves security vulnerabilities reported in older versions.
 
 **CommonJS Dependencies**: Listed in `angular.json` under `allowedCommonJsDependencies` to suppress warnings.
 

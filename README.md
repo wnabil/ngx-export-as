@@ -583,8 +583,8 @@ This library uses the following open-source projects:
 | Library | Version | Purpose | Documentation |
 |---------|---------|---------|---------------|
 | [html2canvas](https://github.com/niklasvh/html2canvas) | ^1.4.1 | PNG image export | [Docs](https://html2canvas.hertzen.com/) |
-| [html2pdf.js](https://github.com/eKoopmans/html2pdf.js) | ^0.10.1 | PDF generation | [Docs](https://ekoopmans.github.io/html2pdf.js/) |
-| [SheetJS (xlsx)](https://github.com/SheetJS/sheetjs) | ^0.18.5 | Excel export | [Docs](https://docs.sheetjs.com/) |
+| [html2pdf.js](https://github.com/eKoopmans/html2pdf.js) | ^0.12.1 | PDF generation | [Docs](https://ekoopmans.github.io/html2pdf.js/) |
+| [SheetJS CE (xlsx)](https://git.sheetjs.com/sheetjs/sheetjs) | 0.20.3 | Excel export | [Docs](https://docs.sheetjs.com/) |
 | [html-docx-js](https://github.com/evidenceprime/html-docx-js) | - | Word document export | [Docs](https://github.com/evidenceprime/html-docx-js) |
 
 > 💡 **Tip:** Refer to the individual library documentation for advanced configuration options.
