@@ -5,7 +5,7 @@
 
 > **Angular service for exporting HTML/Table elements to multiple file formats**
 
-A powerful and flexible Angular library that enables exporting HTML content, tables, and DOM elements to various file formats including PDF, Excel, Word, images, and more. Built with TypeScript and fully compatible with Angular 21+ and Ionic.
+A powerful and flexible Angular library that enables exporting HTML content, tables, and DOM elements to various file formats including PDF, Excel, Word, images, and more. Built with TypeScript and fully compatible with Angular 21+ and Ionic/Capacitor.
 
 ---
 
@@ -40,7 +40,7 @@ A powerful and flexible Angular library that enables exporting HTML content, tab
 - 🔧 **TypeScript** - Full type safety and IntelliSense support
 - ⚡ **Standalone-First** - Modern Angular architecture (v1.21.0+)
 - 🌐 **SSR Compatible** - Server-side rendering support with platform checks
-- 📱 **Ionic Ready** - Works seamlessly with Ionic applications
+- 📱 **Ionic/Capacitor Ready** - Works seamlessly with Ionic/Capacitor applications
 - 🎪 **Two Export Modes** - Download files or retrieve base64 content
 - ♿ **IE Support** - Compatible with Internet Explorer (with polyfills)
 
@@ -694,7 +694,7 @@ export class AppModule { }
 5. **SSR (Server-Side Rendering)**
    - The library includes platform checks for SSR compatibility
    - Canvas-based exports (PDF, PNG) only work in browser context
-   - Use base64 retrieval for Ionic or SSR applications
+   - Use base64 retrieval for Ionic/Capacitor or SSR applications
 
 ---
 
