@@ -4,6 +4,17 @@ All notable changes to ngx-export-as will be documented in this file.
 
 ## Version 1.21.x (2025)
 
+### v1.21.1
+
+#### 🔒 **Security**
+- **Fixed SheetJS Security Vulnerabilities** - Upgraded from outdated npm registry version (0.18.5) to latest official release (0.20.3) from SheetJS CDN
+- Package now uses `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz` as the authoritative source
+- Eliminates all xlsx-related npm audit security warnings
+
+#### 📦 **Dependencies**
+- **SheetJS (xlsx): 0.18.5 → 0.20.3** - Migrated to official SheetJS CDN distribution
+- Updated README.md and documentation with correct SheetJS version and source
+
 ### v1.21.0
 
 #### 🚨 **BREAKING CHANGES**
@@ -21,15 +32,10 @@ All notable changes to ngx-export-as will be documented in this file.
   - ng-packagr: 20.0.0 → 21.0.0
   - zone.js: 0.15.0 → 0.16.0
   - html2pdf.js: 0.10.1 → 0.12.1
-  - **SheetJS (xlsx): 0.18.5 → 0.20.3** - Migrated to official SheetJS CDN distribution
   - core-js: 3.30.2 → 3.47.0
   - rxjs: 7.8.1 → 7.8.2
   - tslib: 2.5.2 → 2.8.1
   - And other dependency updates
-
-#### 🔒 **Security**
-- **Fixed SheetJS Security Vulnerabilities** - Upgraded from outdated npm registry version (0.18.5) to latest official release (0.20.3) from SheetJS CDN
-- Package now uses `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz` as the authoritative source
 
 #### 🔧 **Configuration**
 - Added explicit TypeScript target ES2022 settings
