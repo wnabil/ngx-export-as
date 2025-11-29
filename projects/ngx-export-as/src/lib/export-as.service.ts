@@ -9,9 +9,41 @@ import * as XLSX from 'xlsx';
 import html2pdf from 'html2pdf.js';
 import { isPlatformBrowser } from '@angular/common';
 
+/**
+ * Angular service for exporting HTML/Table elements to various file formats
+ * 
+ * @description
+ * This service provides functionality to export HTML content, tables, or specific DOM elements
+ * into various file formats including PDF, PNG, Excel, Word documents, CSV, JSON, and XML.
+ * 
+ * Supports both browser download and base64 content retrieval for further processing.
+ * 
+ * @export
+ * @class ExportAsService
+ * 
+ * @example
+ * ```typescript
+ * constructor(private exportAsService: ExportAsService) {}
+ * 
+ * exportToPDF() {
+ *   const config: ExportAsConfig = {
+ *     type: 'pdf',
+ *     elementIdOrContent: 'tableId'
+ *   };
+ *   this.exportAsService.save(config, 'my-export').subscribe(() => {
+ *     console.log('Export completed');
+ *   });
+ * }
+ * ```
+ */
 @Injectable()
 export class ExportAsService {
 
+  /**
+   * Creates an instance of ExportAsService
+   * @param {Object} platformId - Angular platform identifier for SSR compatibility
+   * @memberof ExportAsService
+   */
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
@@ -21,8 +53,31 @@ export class ExportAsService {
    }
 
   /**
-   * Main base64 get method, it will return the file as base64 string
-   * @param config your config
+   * Retrieves the exported content as a base64 string or JSON object
+   * 
+   * @description
+   * This is the main method for retrieving exported content without downloading.
+   * The return type varies by format:
+   * - Most formats: base64 encoded string
+   * - JSON format: returns actual JSON object (not base64)
+   * 
+   * @param {ExportAsConfig} config - Export configuration object
+   * @returns {Observable<string | null>} Observable containing the base64 string or null
+   * 
+   * @example
+   * ```typescript
+   * const config: ExportAsConfig = {
+   *   type: 'pdf',
+   *   elementIdOrContent: 'myTableId'
+   * };
+   * 
+   * this.exportAsService.get(config).subscribe(content => {
+   *   console.log('Base64 content:', content);
+   *   // Use content for upload, preview, etc.
+   * });
+   * ```
+   * 
+   * @memberof ExportAsService
    */
   get(config: ExportAsConfig): Observable<string | null> {
     // structure method name dynamically by type
@@ -37,9 +92,30 @@ export class ExportAsService {
   }
 
   /**
-   * Save exported file in old javascript way
-   * @param config your custom config
-   * @param fileName Name of the file to be saved as
+   * Exports and automatically downloads the file to the user's device
+   * 
+   * @description
+   * This method triggers an automatic download of the exported content.
+   * The file extension is automatically appended based on the export type.
+   * 
+   * @param {ExportAsConfig} config - Export configuration object
+   * @param {string} fileName - The name of the file to be saved (without extension)
+   * @returns {Observable<string | null>} Observable that completes when download starts
+   * 
+   * @example
+   * ```typescript
+   * const config: ExportAsConfig = {
+   *   type: 'xlsx',
+   *   elementIdOrContent: 'dataTable',
+   *   options: { /* SheetJS options *\/ }
+   * };
+   * 
+   * this.exportAsService.save(config, 'quarterly-report').subscribe(() => {
+   *   console.log('Download started');
+   * });
+   * ```
+   * 
+   * @memberof ExportAsService
    */
   save(config: ExportAsConfig, fileName: string): Observable<string | null> {
     // set download
@@ -50,8 +126,24 @@ export class ExportAsService {
   }
 
   /**
-   * Converts content string to blob object
-   * @param content string to be converted
+   * Converts a base64 data URL string to a Blob object
+   * 
+   * @description
+   * Extracts the MIME type and decodes the base64 string to create a Blob.
+   * Useful for handling binary data in browsers.
+   * 
+   * @param {string} content - Base64 encoded data URL string (e.g., "data:image/png;base64,...")
+   * @returns {Observable<Blob>} Observable containing the Blob object
+   * 
+   * @example
+   * ```typescript
+   * const dataUrl = 'data:image/png;base64,iVBORw0KGgo...';
+   * this.exportAsService.contentToBlob(dataUrl).subscribe(blob => {
+   *   console.log('Blob size:', blob.size);
+   * });
+   * ```
+   * 
+   * @memberof ExportAsService
    */
   contentToBlob(content: string): Observable<Blob> {
     return new Observable((observer) => {
@@ -69,8 +161,23 @@ export class ExportAsService {
   }
 
   /**
-   * Removes base64 file type from a string like "data:text/csv;base64,"
-   * @param fileContent the base64 string to remove the type from
+   * Removes the data URL prefix from a base64 string
+   * 
+   * @description
+   * Strips the MIME type prefix (e.g., "data:text/csv;base64,") from a base64 data URL,
+   * leaving only the raw base64 encoded content.
+   * 
+   * @param {string} fileContent - The complete base64 data URL string
+   * @returns {string} The raw base64 string without the data URL prefix
+   * 
+   * @example
+   * ```typescript
+   * const dataUrl = 'data:text/csv;base64,SGVsbG8gV29ybGQ=';
+   * const base64Only = this.removeFileTypeFromBase64(dataUrl);
+   * // Result: 'SGVsbG8gV29ybGQ='
+   * ```
+   * 
+   * @memberof ExportAsService
    */
   removeFileTypeFromBase64(fileContent: string): string {
     const re = /^data:[^]*;base64,/g;
@@ -79,18 +186,46 @@ export class ExportAsService {
   }
 
   /**
-   * Structure the base64 file content with the file type string
-   * @param fileContent file content
-   * @param fileMime file mime type "text/csv"
+   * Adds a data URL prefix to a raw base64 string
+   * 
+   * @description
+   * Prepends the MIME type and base64 identifier to create a valid data URL
+   * that can be used in browsers.
+   * 
+   * @param {string} fileContent - Raw base64 encoded string
+   * @param {string} fileMime - MIME type (e.g., "text/csv", "image/png")
+   * @returns {string} Complete base64 data URL string
+   * 
+   * @example
+   * ```typescript
+   * const base64 = 'SGVsbG8gV29ybGQ=';
+   * const dataUrl = this.addFileTypeToBase64(base64, 'text/plain');
+   * // Result: 'data:text/plain;base64,SGVsbG8gV29ybGQ='
+   * ```
+   * 
+   * @memberof ExportAsService
    */
   addFileTypeToBase64(fileContent: string, fileMime: string): string {
     return `data:${fileMime};base64,${fileContent}`;
   }
 
   /**
-   * create downloadable file from dataURL
-   * @param fileName downloadable file name
-   * @param dataURL file content as dataURL
+   * Downloads a file from a data URL
+   * 
+   * @description
+   * Converts a base64 data URL to a Blob and initiates a browser download.
+   * 
+   * @param {string} fileName - The name for the downloaded file (with extension)
+   * @param {string} dataURL - Base64 data URL string
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const dataUrl = 'data:text/csv;base64,SGVsbG8gV29ybGQ=';
+   * this.downloadFromDataURL('myfile.csv', dataUrl);
+   * ```
+   * 
+   * @memberof ExportAsService
    */
   downloadFromDataURL(fileName: string, dataURL: string): void {
     // create blob
@@ -101,9 +236,23 @@ export class ExportAsService {
   }
 
   /**
-   * Downloads the blob object as a file
-   * @param blob file object as blob
-   * @param fileName downloadable file name
+   * Downloads a file from a Blob object
+   * 
+   * @description
+   * Handles file download from Blob with cross-browser support including legacy IE.
+   * Creates an object URL and triggers the download appropriately for each browser.
+   * 
+   * @param {Blob} blob - The Blob object containing file data
+   * @param {string} fileName - The name for the downloaded file (with extension)
+   * @returns {void}
+   * 
+   * @example
+   * ```typescript
+   * const blob = new Blob(['Hello World'], { type: 'text/plain' });
+   * this.downloadFromBlob(blob, 'hello.txt');
+   * ```
+   * 
+   * @memberof ExportAsService
    */
   downloadFromBlob(blob: Blob, fileName: string) {
     // get object url
@@ -117,6 +266,20 @@ export class ExportAsService {
     }
   }
 
+  /**
+   * Creates and triggers a download link programmatically
+   * 
+   * @private
+   * @description
+   * Creates a temporary anchor element, simulates a click to trigger download,
+   * and then removes the element from the DOM.
+   * 
+   * @param {string} fileName - The name for the downloaded file
+   * @param {string} url - The object URL or data URL to download
+   * @returns {void}
+   * 
+   * @memberof ExportAsService
+   */
   private saveFile(fileName: string, url: string) {
     // if not using IE then create link element
     const element = document.createElement('a');
@@ -134,6 +297,39 @@ export class ExportAsService {
     document.body.removeChild(element);
   }
 
+  /**
+   * Exports content to PDF format
+   * 
+   * @private
+   * @description
+   * Uses html2pdf.js library to convert HTML content to PDF.
+   * Supports custom PDF manipulation via pdfCallbackFn option.
+   * Accepts HTMLElement, Canvas, Image, or element ID as input.
+   * 
+   * @param {ExportAsConfig} config - Export configuration with PDF-specific options
+   * @returns {Observable<string | null>} Observable with base64 PDF data or null if downloading
+   * 
+   * @example
+   * ```typescript
+   * // PDF with custom options
+   * config.options = {
+   *   margin: 10,
+   *   filename: 'report.pdf',
+   *   image: { type: 'jpeg', quality: 0.98 },
+   *   html2canvas: { scale: 2 },
+   *   jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+   *   pdfCallbackFn: (pdf) => {
+   *     const pageCount = pdf.internal.getNumberOfPages();
+   *     for (let i = 1; i <= pageCount; i++) {
+   *       pdf.setPage(i);
+   *       pdf.text('Page ' + i, 10, 10);
+   *     }
+   *   }
+   * };
+   * ```
+   * 
+   * @memberof ExportAsService
+   */
   private getPDF(config: ExportAsConfig): Observable<string | null> {
     return new Observable((observer) => {
       if (!config.options) {
@@ -169,12 +365,51 @@ export class ExportAsService {
     });
   }
 
+  /**
+   * Applies a custom callback function to modify the PDF before output
+   * 
+   * @private
+   * @description
+   * Allows custom modifications to the PDF object (headers, footers, page numbers, etc.)
+   * before final rendering or download.
+   * 
+   * @param {any} pdf - The html2pdf instance
+   * @param {Function} pdfCallbackFn - Callback function to modify the PDF
+   * @returns {Promise} Promise that resolves after callback execution
+   * 
+   * @memberof ExportAsService
+   */
   private applyPdfCallbackFn(pdf, pdfCallbackFn) {
     return pdf.toPdf().get('pdf').then((pdfRef) => {
       pdfCallbackFn(pdfRef);
     });
   }
 
+  /**
+   * Exports content to PNG image format
+   * 
+   * @private
+   * @description
+   * Uses html2canvas library to convert HTML element to PNG image.
+   * Captures the visual representation of the specified DOM element.
+   * 
+   * @param {ExportAsConfig} config - Export configuration with html2canvas options
+   * @returns {Observable<string | null>} Observable with base64 PNG data or null if downloading
+   * 
+   * @example
+   * ```typescript
+   * // PNG with custom options
+   * config.options = {
+   *   scale: 2,              // Higher quality
+   *   backgroundColor: '#ffffff',
+   *   logging: false,
+   *   useCORS: true,        // For external images
+   *   allowTaint: false
+   * };
+   * ```
+   * 
+   * @memberof ExportAsService
+   */
   private getPNG(config: ExportAsConfig): Observable<string | null> {
     return new Observable((observer) => {
       const element: HTMLElement = document.getElementById(config.elementIdOrContent);
@@ -193,6 +428,29 @@ export class ExportAsService {
     });
   }
 
+  /**
+   * Exports HTML table to CSV format
+   * 
+   * @private
+   * @description
+   * Extracts data from HTML table elements (th, td) and converts to CSV format.
+   * Each row becomes a CSV line with comma-separated values.
+   * Values are quoted to handle special characters.
+   * 
+   * @param {ExportAsConfig} config - Export configuration (requires table element)
+   * @returns {Observable<string | null>} Observable with base64 CSV data or null if downloading
+   * 
+   * @example
+   * ```typescript
+   * // HTML table structure required
+   * <table id="myTable">
+   *   <tr><th>Name</th><th>Age</th></tr>
+   *   <tr><td>John</td><td>30</td></tr>
+   * </table>
+   * ```
+   * 
+   * @memberof ExportAsService
+   */
   private getCSV(config: ExportAsConfig): Observable<string | null> {
     return new Observable((observer) => {
       const element: HTMLElement = document.getElementById(config.elementIdOrContent);
@@ -219,12 +477,50 @@ export class ExportAsService {
     });
   }
 
+  /**
+   * Exports HTML table to plain text format
+   * 
+   * @private
+   * @description
+   * Reuses CSV export logic but saves as .txt file extension.
+   * Outputs comma-separated values in plain text format.
+   * 
+   * @param {ExportAsConfig} config - Export configuration (requires table element)
+   * @returns {Observable<string | null>} Observable with base64 text data or null if downloading
+   * 
+   * @memberof ExportAsService
+   */
   private getTXT(config: ExportAsConfig): Observable<string | null> {
     const nameFrags = config.fileName.split('.');
     config.fileName = `${nameFrags[0]}.txt`;
     return this.getCSV(config);
   }
 
+  /**
+   * Exports HTML table to Microsoft Excel format (.xls)
+   * 
+   * @private
+   * @description
+   * Uses SheetJS (xlsx library) to convert HTML table to Excel format.
+   * Supports both legacy .xls and modern .xlsx formats.
+   * The resulting file is compatible with Microsoft Excel and other spreadsheet applications.
+   * 
+   * @param {ExportAsConfig} config - Export configuration with SheetJS options
+   * @returns {Observable<string | null>} Observable with base64 Excel data or null if downloading
+   * 
+   * @example
+   * ```typescript
+   * // Excel with custom options
+   * config.options = {
+   *   bookType: 'xlsx',
+   *   sheet: 'Sheet1',
+   *   raw: false,
+   *   dateNF: 'yyyy-mm-dd'
+   * };
+   * ```
+   * 
+   * @memberof ExportAsService
+   */
   private getXLS(config: ExportAsConfig): Observable<string | null> {
     return new Observable((observer) => {
 
@@ -244,6 +540,19 @@ export class ExportAsService {
     });
   }
 
+  /**
+   * Exports HTML table to Microsoft Excel format (.xlsx)
+   * 
+   * @private
+   * @description
+   * Alias for getXLS method. Both .xls and .xlsx use the same underlying implementation
+   * via SheetJS library.
+   * 
+   * @param {ExportAsConfig} config - Export configuration with SheetJS options
+   * @returns {Observable<string | null>} Observable with base64 Excel data or null if downloading
+   * 
+   * @memberof ExportAsService
+   */
   private getXLSX(config: ExportAsConfig): Observable<string | null> {
     return this.getXLS(config);
   }
@@ -274,6 +583,36 @@ export class ExportAsService {
   //   return this.getDOCX(config);
   // }
 
+  /**
+   * Exports HTML table to JSON format
+   * 
+   * @private
+   * @description
+   * Converts HTML table to JSON array of objects.
+   * First row is treated as headers (keys), subsequent rows as data values.
+   * Headers are normalized (lowercase, spaces removed).
+   * 
+   * **Note:** Unlike other formats, this returns actual JSON objects, not base64.
+   * 
+   * @param {ExportAsConfig} config - Export configuration (requires table element)
+   * @returns {Observable<any[] | null>} Observable with JSON array or null if downloading
+   * 
+   * @example
+   * ```typescript
+   * // HTML table:
+   * // | Name  | Age |
+   * // | John  | 30  |
+   * // | Jane  | 25  |
+   * 
+   * // Result:
+   * [
+   *   { "name": "John", "age": "30" },
+   *   { "name": "Jane", "age": "25" }
+   * ]
+   * ```
+   * 
+   * @memberof ExportAsService
+   */
   private getJSON(config: ExportAsConfig): Observable<any[] | null> {
     return new Observable((observer) => {
       const data = []; // first row needs to be headers
@@ -303,6 +642,43 @@ export class ExportAsService {
     });
   }
 
+  /**
+   * Exports HTML table to XML format
+   * 
+   * @private
+   * @description
+   * Converts HTML table to XML structure.
+   * First cell of each row becomes the class name attribute,
+   * remaining cells become data elements.
+   * 
+   * @param {ExportAsConfig} config - Export configuration (requires table element)
+   * @returns {Observable<string | null>} Observable with base64 XML data or null if downloading
+   * 
+   * @example
+   * ```typescript
+   * // HTML table:
+   * // | Name  | Age | City    |
+   * // | John  | 30  | NYC     |
+   * // | Jane  | 25  | Boston  |
+   * 
+   * // Result:
+   * <?xml version="1.0" encoding="UTF-8"?>
+   * <Root>
+   *   <Classes>
+   *     <Class name="John">
+   *       <data>30</data>
+   *       <data>NYC</data>
+   *     </Class>
+   *     <Class name="Jane">
+   *       <data>25</data>
+   *       <data>Boston</data>
+   *     </Class>
+   *   </Classes>
+   * </Root>
+   * ```
+   * 
+   * @memberof ExportAsService
+   */
   private getXML(config: ExportAsConfig): Observable<string | null> {
     return new Observable((observer) => {
       let xml = '<?xml version="1.0" encoding="UTF-8"?><Root><Classes>';
@@ -329,6 +705,20 @@ export class ExportAsService {
     });
   }
 
+  /**
+   * Encodes a string to base64 with UTF-8 support
+   * 
+   * @private
+   * @description
+   * Wrapper around browser's btoa() with proper UTF-8 encoding.
+   * Handles special characters and international text correctly.
+   * Uses encodeURIComponent and unescape for proper character encoding.
+   * 
+   * @param {string} content - The string content to encode
+   * @returns {string} Base64 encoded string
+   * 
+   * @memberof ExportAsService
+   */
   private btoa(content: string) {
     return btoa(unescape(encodeURIComponent(content)));
   }

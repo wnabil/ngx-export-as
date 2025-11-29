@@ -4,15 +4,15 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "html2pdf.js": "^0.10.1",
+    "html2pdf.js": "^0.12.1",
     "html2canvas": "^1.4.1",
     "xlsx": "^0.18.5",
-    "rxjs": "~7.8.1",
-    "tslib": "^2.5.2"
+    "rxjs": "~7.8.2",
+    "tslib": "^2.8.2"
   },
   "peerDependencies": {
-    "@angular/common": "^20.0.5",
-    "@angular/core": "^20.0.5"
+    "@angular/common": "^21.0.1",
+    "@angular/core": "^21.0.1"
   },
   "repository": {
     "type": "git",

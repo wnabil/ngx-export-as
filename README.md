@@ -1,42 +1,512 @@
-# Angular 2+/Ionic 2+ Html to file export
-
-## Typescript angular module to export Table/HTML to popular file formats
+# ngx-export-as
 
 [![npm version](https://badge.fury.io/js/ngx-export-as.svg)](https://badge.fury.io/js/ngx-export-as)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A simple module to export the html or table elements to downloadable file.
+> **Angular service for exporting HTML/Table elements to multiple file formats**
 
-## Supported Formats
+A powerful and flexible Angular library that enables exporting HTML content, tables, and DOM elements to various file formats including PDF, Excel, Word, images, and more. Built with TypeScript and fully compatible with Angular 20+ and Ionic.
 
-- Image - .png
+---
 
-- PDF - .pdf
+## 📋 Table of Contents
 
-- CSV - .csv
+- [Features](#-features)
+- [Supported Formats](#-supported-formats)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Usage Examples](#-usage-examples)
+- [Configuration](#-configuration)
+- [Format-Specific Options](#-format-specific-options)
+- [Browser Support](#-browser-support)
+- [Demo](#-demo)
+- [Dependencies](#-dependencies)
+- [Contributing](#-contributing)
+- [Changelog](#-changelog)
+- [License](#-license)
 
-- Text - .txt
+---
 
-- Microsoft Excel sheets - .xls, .xlsx
+## ✨ Features
 
-- Microsoft Word documents - .doc, .docx "REQUIRES TARGET CONFIG es2015" [source issue](https://github.com/privateOmega/html-to-docx/issues/3#issuecomment-886222607)
+- 🎯 **Multiple Export Formats** - Support for 10+ file formats
+- 📦 **Zero Configuration** - Works out of the box with sensible defaults
+- 🎨 **Customizable** - Extensive options for each export format
+- 🚀 **Lightweight** - Minimal dependencies and optimized bundle size
+- 🔧 **TypeScript** - Full type safety and IntelliSense support
+- 🌐 **SSR Compatible** - Server-side rendering support with platform checks
+- 📱 **Ionic Ready** - Works seamlessly with Ionic applications
+- 🎪 **Two Export Modes** - Download files or retrieve base64 content
+- ♿ **IE Support** - Compatible with Internet Explorer (with polyfills)
 
-- JSON - .json
+---
 
-- XML - .xml
+## 📄 Supported Formats
 
-## Used libraries "Useful for custom format options"
+| Format | Extension | Description | Table Required |
+|--------|-----------|-------------|----------------|
+| **PDF** | `.pdf` | Portable Document Format | ❌ No |
+| **PNG** | `.png` | Image export | ❌ No |
+| **Excel** | `.xlsx`, `.xls` | Microsoft Excel spreadsheet | ✅ Yes |
+| **Word** | `.docx`, `.doc` | Microsoft Word document* | ❌ No |
+| **CSV** | `.csv` | Comma-separated values | ✅ Yes |
+| **Text** | `.txt` | Plain text file | ✅ Yes |
+| **JSON** | `.json` | JavaScript Object Notation | ✅ Yes |
+| **XML** | `.xml` | Extensible Markup Language | ✅ Yes |
 
-- PNG - [HTML2Canvas](https://github.com/niklasvh/html2canvas/)
+> **Note:** Word document export (`.doc`, `.docx`) requires TypeScript target configuration `es2015` or higher. See [this issue](https://github.com/privateOmega/html-to-docx/issues/3#issuecomment-886222607) for details.
 
-- PDF - [HTML2PDF](https://github.com/eKoopmans/html2pdf.js)
+---
 
-- Microsoft Excel sheets - [SheetJS js-xlsx](https://github.com/SheetJS/js-xlsx)
+## 📦 Installation
 
-- Microsoft Word documents - [html-docx-js](https://github.com/evidenceprime/html-docx-js)
+### Using npm
 
-## Demo
+```bash
+npm install --save ngx-export-as
+```
 
-Running the demo:
+### Using yarn
+
+```bash
+yarn add ngx-export-as
+```
+
+### Using pnpm
+
+```bash
+pnpm add ngx-export-as
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1. Import the Module
+
+Add `ExportAsModule` to your application module:
+
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { ExportAsModule } from 'ngx-export-as';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    ExportAsModule  // Add ExportAsModule here
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+### 2. Inject the Service
+
+Import and inject `ExportAsService` in your component:
+
+```typescript
+import { Component } from '@angular/core';
+import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
+
+@Component({
+  selector: 'app-export',
+  templateUrl: './export.component.html'
+})
+export class ExportComponent {
+  
+  constructor(private exportAsService: ExportAsService) { }
+  
+  // Your export methods here
+}
+```
+
+### 3. Add HTML Element
+
+Create an HTML element with an ID to export:
+
+```html
+<div id="contentToExport">
+  <h1>My Report</h1>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Age</th>
+      <th>City</th>
+    </tr>
+    <tr>
+      <td>John Doe</td>
+      <td>30</td>
+      <td>New York</td>
+    </tr>
+  </table>
+</div>
+
+<button (click)="exportAsPDF()">Export as PDF</button>
+```
+
+### 4. Export the Content
+
+Implement the export method:
+
+```typescript
+exportAsPDF() {
+  const exportConfig: ExportAsConfig = {
+    type: 'pdf',
+    elementIdOrContent: 'contentToExport'
+  };
+  
+  this.exportAsService.save(exportConfig, 'MyReport').subscribe(() => {
+    console.log('PDF export started');
+  });
+}
+```
+
+---
+
+## 💡 Usage Examples
+
+### Download File (Automatic)
+
+Export and automatically download the file:
+
+```typescript
+import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
+
+export class ExportComponent {
+  
+  constructor(private exportAsService: ExportAsService) { }
+  
+  exportToPDF() {
+    const config: ExportAsConfig = {
+      type: 'pdf',
+      elementIdOrContent: 'myTableId'
+    };
+    
+    this.exportAsService.save(config, 'my-report').subscribe(() => {
+      // File download started
+      console.log('Export completed!');
+    });
+  }
+}
+```
+
+### Get Base64 Content
+
+Retrieve the exported content as base64 for further processing:
+
+```typescript
+getBase64Content() {
+  const config: ExportAsConfig = {
+    type: 'png',
+    elementIdOrContent: 'chartElement'
+  };
+  
+  this.exportAsService.get(config).subscribe((content: string) => {
+    // Use base64 content for upload, preview, etc.
+    console.log('Base64 content:', content);
+    
+    // Example: Upload to server
+    this.uploadToServer(content);
+    
+    // Example: Display in image tag
+    this.imagePreview = content;
+  });
+}
+```
+
+### Export to Excel
+
+Export table data to Excel spreadsheet:
+
+```typescript
+exportToExcel() {
+  const config: ExportAsConfig = {
+    type: 'xlsx',
+    elementIdOrContent: 'dataTable',
+    options: {
+      bookType: 'xlsx',
+      sheet: 'Sheet1'
+    }
+  };
+  
+  this.exportAsService.save(config, 'data-export').subscribe(() => {
+    console.log('Excel file downloaded');
+  });
+}
+```
+
+### Export to JSON
+
+Convert table data to JSON format:
+
+```typescript
+exportToJSON() {
+  const config: ExportAsConfig = {
+    type: 'json',
+    elementIdOrContent: 'userTable'
+  };
+  
+  // Note: JSON returns actual objects, not base64
+  this.exportAsService.get(config).subscribe((data: any[]) => {
+    console.log('JSON data:', data);
+    // Process JSON data
+    this.processData(data);
+  });
+}
+```
+
+### Multiple Export Buttons
+
+```html
+<div id="reportContent">
+  <!-- Your content here -->
+</div>
+
+<div class="export-buttons">
+  <button (click)="export('pdf')">Export PDF</button>
+  <button (click)="export('xlsx')">Export Excel</button>
+  <button (click)="export('csv')">Export CSV</button>
+  <button (click)="export('png')">Export Image</button>
+</div>
+```
+
+```typescript
+export(format: 'pdf' | 'xlsx' | 'csv' | 'png') {
+  const config: ExportAsConfig = {
+    type: format,
+    elementIdOrContent: 'reportContent'
+  };
+  
+  this.exportAsService.save(config, `report-${Date.now()}`).subscribe(() => {
+    console.log(`${format.toUpperCase()} export completed`);
+  });
+}
+```
+
+---
+
+## ⚙️ Configuration
+
+### ExportAsConfig Interface
+
+```typescript
+interface ExportAsConfig {
+  type: SupportedExtensions;      // Required: Export format
+  elementIdOrContent: string;     // Required: Element ID or content
+  download?: boolean;             // Optional: Auto-download (used internally)
+  fileName?: string;              // Optional: File name (used internally)
+  options?: any;                  // Optional: Format-specific options
+}
+```
+
+### Configuration Properties
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `type` | `SupportedExtensions` | ✅ Yes | The export file format (pdf, png, xlsx, etc.) |
+| `elementIdOrContent` | `string` | ✅ Yes | The HTML element ID to export |
+| `download` | `boolean` | ❌ No | Internal flag for download mode |
+| `fileName` | `string` | ❌ No | Internal filename (set via `save()` method) |
+| `options` | `any` | ❌ No | Format-specific configuration options |
+
+---
+
+## 🎛️ Format-Specific Options
+
+### PDF Options
+
+Powered by [html2pdf.js](https://github.com/eKoopmans/html2pdf.js):
+
+```typescript
+const config: ExportAsConfig = {
+  type: 'pdf',
+  elementIdOrContent: 'content',
+  options: {
+    margin: 10,
+    filename: 'report.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { 
+      scale: 2,
+      useCORS: true,
+      logging: false
+    },
+    jsPDF: { 
+      unit: 'mm', 
+      format: 'a4', 
+      orientation: 'portrait' 
+    },
+    // Custom PDF manipulation
+    pdfCallbackFn: (pdf) => {
+      // Add page numbers
+      const pageCount = pdf.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(10);
+        pdf.text(`Page ${i} of ${pageCount}`, 
+          pdf.internal.pageSize.getWidth() / 2, 
+          pdf.internal.pageSize.getHeight() - 10,
+          { align: 'center' }
+        );
+      }
+    }
+  }
+};
+```
+
+**Common PDF Options:**
+- `margin`: Margin size (number or object with top, right, bottom, left)
+- `filename`: Output filename
+- `image`: Image export options (type, quality)
+- `html2canvas`: Canvas rendering options
+- `jsPDF`: PDF generation options (unit, format, orientation)
+- `pdfCallbackFn`: Custom callback function for PDF manipulation
+
+### PNG Options
+
+Powered by [html2canvas](https://github.com/niklasvh/html2canvas):
+
+```typescript
+const config: ExportAsConfig = {
+  type: 'png',
+  elementIdOrContent: 'chart',
+  options: {
+    scale: 2,                    // Higher quality (2x resolution)
+    backgroundColor: '#ffffff',  // Background color
+    logging: false,              // Disable console logs
+    useCORS: true,              // Enable cross-origin images
+    allowTaint: false,          // Prevent canvas tainting
+    width: 1920,                // Custom width
+    height: 1080                // Custom height
+  }
+};
+```
+
+### Excel Options
+
+Powered by [SheetJS (xlsx)](https://github.com/SheetJS/sheetjs):
+
+```typescript
+const config: ExportAsConfig = {
+  type: 'xlsx',
+  elementIdOrContent: 'dataTable',
+  options: {
+    bookType: 'xlsx',
+    sheet: 'Sales Data',
+    raw: false,                  // Parse formatted values
+    dateNF: 'yyyy-mm-dd',       // Date format
+    cellDates: true             // Keep dates as date objects
+  }
+};
+```
+
+### Word Document Options
+
+Powered by [html-docx-js](https://github.com/evidenceprime/html-docx-js):
+
+> ⚠️ **Important:** Requires TypeScript `target: "es2015"` or higher in `tsconfig.json`
+
+```typescript
+const config: ExportAsConfig = {
+  type: 'docx',
+  elementIdOrContent: 'document',
+  options: {
+    orientation: 'landscape',    // or 'portrait'
+    margins: {
+      top: '20',
+      right: '20',
+      bottom: '20',
+      left: '20'
+    }
+  }
+};
+```
+
+### CSV/TXT Options
+
+No additional options required. CSV format automatically quotes values and handles special characters.
+
+### JSON Options
+
+No additional options. Returns actual JSON objects (not base64):
+
+```typescript
+this.exportAsService.get(config).subscribe((data: any[]) => {
+  // data is an array of objects
+  console.log(data); // [{ name: 'John', age: '30' }, ...]
+});
+```
+
+### XML Options
+
+No additional options. Converts table to structured XML format.
+
+---
+
+## 🌐 Browser Support
+
+### Modern Browsers
+- ✅ Chrome (latest)
+- ✅ Firefox (latest)
+- ✅ Safari (latest)
+- ✅ Edge (latest)
+- ✅ Opera (latest)
+
+### Internet Explorer Support
+
+For IE11 support, you need to enable polyfills:
+
+#### 1. Enable Angular Polyfills
+
+Uncomment the required polyfills in `src/polyfills.ts`:
+
+```typescript
+// Enable all BROWSER POLYFILLS for IE support
+import 'core-js/es/symbol';
+import 'core-js/es/object';
+import 'core-js/es/function';
+import 'core-js/es/parse-int';
+import 'core-js/es/parse-float';
+import 'core-js/es/number';
+import 'core-js/es/math';
+import 'core-js/es/string';
+import 'core-js/es/date';
+import 'core-js/es/array';
+import 'core-js/es/regexp';
+import 'core-js/es/map';
+import 'core-js/es/weak-map';
+import 'core-js/es/set';
+```
+
+#### 2. Add TypedArray Polyfill
+
+Create `src/polyfills/typedarray.js`:
+
+```javascript
+// TypedArray polyfill for IE
+if (!Int8Array.__proto__) {
+  console.log('Applying TypedArray polyfill...');
+  // Polyfill implementation
+  // See: https://github.com/inexorabletash/polyfill/blob/master/typedarray.js
+}
+```
+
+Import in `polyfills.ts`:
+
+```typescript
+import './polyfills/typedarray.js';
+```
+
+---
+
+## 🎪 Demo
+
+### Running the Demo Application
+
+Clone and run the demo application:
 
 ```bash
 git clone https://github.com/wnabil/ngx-export-as.git
@@ -46,216 +516,315 @@ ng build ngx-export-as
 ng serve
 ```
 
-Then navigate to `localhost:4200` via your browser.
+Then navigate to `http://localhost:4200` in your browser.
 
-## Get Started
+---
 
-**(1)** Get Angular export as package:
+## 📚 Dependencies
+
+This library uses the following open-source projects:
+
+| Library | Version | Purpose | Documentation |
+|---------|---------|---------|---------------|
+| [html2canvas](https://github.com/niklasvh/html2canvas) | ^1.4.1 | PNG image export | [Docs](https://html2canvas.hertzen.com/) |
+| [html2pdf.js](https://github.com/eKoopmans/html2pdf.js) | ^0.10.1 | PDF generation | [Docs](https://ekoopmans.github.io/html2pdf.js/) |
+| [SheetJS (xlsx)](https://github.com/SheetJS/sheetjs) | ^0.18.5 | Excel export | [Docs](https://docs.sheetjs.com/) |
+| [html-docx-js](https://github.com/evidenceprime/html-docx-js) | - | Word document export | [Docs](https://github.com/evidenceprime/html-docx-js) |
+
+> 💡 **Tip:** Refer to the individual library documentation for advanced configuration options.
+
+---
+
+## 📝 Important Notes
+
+### Format-Specific Requirements
+
+1. **Table Required Formats**
+   - The following formats require a valid HTML `<table>` element:
+     - Excel (`.xlsx`, `.xls`)
+     - CSV (`.csv`)
+     - Text (`.txt`)
+     - JSON (`.json`)
+     - XML (`.xml`)
+
+2. **JSON Format Behavior**
+   - Unlike other formats, JSON `get()` method returns actual JSON objects, not base64-encoded strings
+   - First table row is used as object keys (headers)
+   - Great for processing data in-memory before exporting
+
+3. **Word Document Requirements**
+   - DOCX/DOC export requires TypeScript compiler target `es2015` or higher
+   - Update `tsconfig.json`:
+     ```json
+     {
+       "compilerOptions": {
+         "target": "es2015"
+       }
+     }
+     ```
+
+4. **PDF Element Types**
+   - PDF export accepts multiple input types:
+     - Element ID (string): `'myElementId'`
+     - HTMLElement: `document.getElementById('myElement')`
+     - Canvas: Direct canvas element
+     - Image: Image element or data URL
+
+5. **SSR (Server-Side Rendering)**
+   - The library includes platform checks for SSR compatibility
+   - Canvas-based exports (PDF, PNG) only work in browser context
+   - Use base64 retrieval for Ionic or SSR applications
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+### Reporting Issues
+
+Found a bug or have a feature request?
+
+1. Check [existing issues](https://github.com/wnabil/ngx-export-as/issues) first
+2. Create a new issue with:
+   - Clear description
+   - Angular version
+   - Browser information
+   - Reproduction steps
+   - Code examples
+
+### Pull Requests
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Make your changes
+4. Test thoroughly
+5. Commit with clear messages: `git commit -m "feat: add new feature"`
+6. Push to your fork: `git push origin feature/my-feature`
+7. Submit a pull request
+
+### Development Setup
 
 ```bash
-npm install --save ngx-export-as
+# Clone the repository
+git clone https://github.com/wnabil/ngx-export-as.git
+cd ngx-export-as
+
+# Install dependencies
+npm install
+
+# Build the library
+ng build ngx-export-as
+
+# Run the demo app
+ng serve
+
+# Run tests
+npm test
+
+# Build for production
+npm run package
 ```
 
-**(2)** import `ngx-export-as` in your `app.module.ts` and `imports` array.
+### Contact
 
-```javascript
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+- **Email:** breakersniper@gmail.com
+- **GitHub:** [@wnabil](https://github.com/wnabil)
+- **Issues:** [GitHub Issues](https://github.com/wnabil/ngx-export-as/issues)
 
-import { AppComponent } from './app.component';
+> 📧 If you don't receive a response within 2 days, please follow up on your issue.
 
-import { ExportAsModule } from 'ngx-export-as';
+---
 
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    ExportAsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
+## 📜 Changelog
+
+### Version 1.20.x (2024-2025)
+
+#### v1.20.1 (Current)
+- 🔧 Maintenance updates for Angular 20
+
+#### v1.20.0
+- ⬆️ **Angular 20 Support** - PR [#118](https://github.com/wnabil/ngx-export-as/pull/118) by [@jhoglin](https://github.com/jhoglin)
+
+### Version 1.19.x
+
+#### v1.19.0
+- ⬆️ **Angular 19 Support** - PR [#116](https://github.com/wnabil/ngx-export-as/pull/116) by [@ralphinevanbraak](https://github.com/ralphinevanbraak)
+
+### Version 1.18.x
+
+#### v1.18.0
+- ⬆️ **Angular 18 Support** - PR [#115](https://github.com/wnabil/ngx-export-as/pull/115) by [@AileThrowmountain](https://github.com/AileThrowmountain)
+
+### Version 1.17.x
+
+#### v1.17.0
+- ⬆️ **Angular 17 Support** - PR [#114](https://github.com/wnabil/ngx-export-as/pull/114) by [@MuhAssar](https://github.com/MuhAssar)
+
+### Version 1.16.x
+
+#### v1.16.0
+- ⬆️ **Angular 16 Support**
+
+### Version 1.15.x
+
+#### v1.15.1
+- 🐛 **Fix:** html2canvas SSR compatibility - PR [#112](https://github.com/wnabil/ngx-export-as/pull/112) by [@enea4science](https://github.com/enea4science)
+
+#### v1.15.0
+- ⬆️ **Angular 15 Support** - Issue [#110](https://github.com/wnabil/ngx-export-as/issues/110) by [@MuhAssar](https://github.com/MuhAssar)
+
+### Version 1.14.x
+
+#### v1.14.1
+- ⬆️ **Angular 14 Support** - Issue [#109](https://github.com/wnabil/ngx-export-as/issues/109)
+- ⚠️ **Note:** DOCX temporarily not supported - [Related Issue](https://github.com/privateOmega/html-to-docx/issues/145)
+
+### Version 1.13.x
+
+#### v1.13.0
+- ⬆️ **Angular 13 Support** - Issue [#102](https://github.com/wnabil/ngx-export-as/issues/102)
+
+### Version 1.12.x
+
+#### v1.12.2
+- 🐛 **Fix:** CSV comma handling - Issue [#97](https://github.com/wnabil/ngx-export-as/issues/97) by [@souradeep07](https://github.com/souradeep07)
+
+#### v1.12.1
+- ✨ **Feature:** Re-enabled DOCX support - Issue [#76](https://github.com/wnabil/ngx-export-as/issues/76)
+- ⚠️ **Requires:** TypeScript target `es2015` or higher
+
+#### v1.12.0
+- ⬆️ **Angular 12 Support**
+
+### Version 1.5.x
+
+#### v1.5.0
+- ⬆️ **Angular 10 Support** - Issue [#84](https://github.com/wnabil/ngx-export-as/issues/84) by [@kgish](https://github.com/kgish)
+
+### Version 1.4.x
+
+#### v1.4.2
+- ✨ **Feature:** PDF now supports multiple element types - Issue [#61](https://github.com/wnabil/ngx-export-as/issues/61)
+  - Accepts: string, HTMLElement, Canvas, Image, or element ID
+
+#### v1.4.1
+- ⬆️ **Angular 9 Support**
+
+#### v1.4.0
+- 🐛 **Fix:** SSR builds - Issue [#21](https://github.com/wnabil/ngx-export-as/issues/21)
+- ⚠️ **Temporary:** DOCX support removed (restored in v1.12.1)
+
+### Version 1.3.x
+
+#### v1.3.1
+- ✨ **Feature:** PDF callback function support - Issue [#38](https://github.com/wnabil/ngx-export-as/issues/38), PR [#35](https://github.com/wnabil/ngx-export-as/pull/35) by [@Sreekanth2108](https://github.com/Sreekanth2108)
+  - Add custom headers, footers, page numbers before rendering
+
+#### v1.3.0
+- ⬆️ **Angular 8 Support**
+
+### Version 1.2.x
+
+#### v1.2.6
+- 🔄 **Breaking:** `save()` method now returns Observable
+  - **Migration:** Add `.subscribe()` to all `save()` calls
+
+#### v1.2.4
+- 🐛 **Fix:** All PDF html2canvas issues - Issues [#1](https://github.com/wnabil/ngx-export-as/issues/1), [#3](https://github.com/wnabil/ngx-export-as/issues/3), [#11](https://github.com/wnabil/ngx-export-as/issues/11)
+
+#### v1.2.3
+- 🐛 **Fix:** Internet Explorer support - Issue [#12](https://github.com/wnabil/ngx-export-as/issues/12)
+- 🐛 **Fix:** Special language characters - Issue [#16](https://github.com/wnabil/ngx-export-as/issues/16)
+- ⬆️ **Support:** Angular 4 and 5 - Issue [#15](https://github.com/wnabil/ngx-export-as/issues/15)
+- 📝 **Docs:** Updated README - Issue [#9](https://github.com/wnabil/ngx-export-as/issues/9)
+
+#### v1.2.2
+- 📝 **Docs:** Fixed README and license
+
+#### v1.2.0
+- 🔄 **Migration:** Switched to Angular library format with ng-packagr
+
+### Version 1.1.x
+
+#### v1.1.1
+- 🐛 **Fix:** Issue [#5](https://github.com/wnabil/ngx-export-as/issues/5)
+
+#### v1.1.0
+- ⬆️ **Angular 6 Support**
+
+### Version 1.0.x
+
+#### v1.0.0
+- 🎉 **Initial Release**
+- ✨ All export methods implemented
+- 📄 Support for PDF, PNG, XLS, XLSX, CSV, TXT, JSON, XML
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+```
+MIT License
+
+Copyright (c) 2025 Wassem Nabil
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 ```
 
-**(3)** Import `'ExportAsService, ExportAsConfig'` into your component.
+See [LICENSE](LICENSE) file for details.
 
-```javascript
-import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
+---
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
-export class AppComponent {
-  exportAsConfig: ExportAsConfig = {
-    type: 'png', // the type you want to download
-    elementIdOrContent: 'myTableElementId', // the id of html/table element
-  }
-  constructor(private exportAsService: ExportAsService) { }
+## 🙏 Acknowledgments
 
-}
-```
+Special thanks to all contributors who have helped improve this library:
 
-**(4)** Use the available methods into your component to download or get the required data type.
+- [@jhoglin](https://github.com/jhoglin) - Angular 20 support
+- [@ralphinevanbraak](https://github.com/ralphinevanbraak) - Angular 19 support
+- [@AileThrowmountain](https://github.com/AileThrowmountain) - Angular 18 support
+- [@MuhAssar](https://github.com/MuhAssar) - Angular 17 & 15 support
+- [@enea4science](https://github.com/enea4science) - SSR fix
+- [@kgish](https://github.com/kgish) - Angular 10 support
+- [@souradeep07](https://github.com/souradeep07) - CSV fix
+- [@Sreekanth2108](https://github.com/Sreekanth2108) - PDF callback feature
 
-```javascript
-  function export() {
-    // download the file using old school javascript method
-    this.exportAsService.save(this.exportAsConfig, 'My File Name').subscribe(() => {
-      // save started
-    });
-    // get the data as base64 or json object for json type - this will be helpful in ionic or SSR
-    this.exportAsService.get(this.exportAsConfig).subscribe(content => {
-      console.log(content);
-    });
-  }
-```
+And to all users who reported issues and provided feedback!
 
-## IE Users
+---
 
-- For Microsoft Internet Explorer this library requires many polyfills, please enable all BROWSER POLYFILLS.
+## 🔗 Links
 
-- [typedarray](https://github.com/inexorabletash/polyfill/blob/master/typedarray.js) Custom polyfill is also required.
+- **NPM Package:** [ngx-export-as](https://www.npmjs.com/package/ngx-export-as)
+- **GitHub Repository:** [wnabil/ngx-export-as](https://github.com/wnabil/ngx-export-as)
+- **Issue Tracker:** [GitHub Issues](https://github.com/wnabil/ngx-export-as/issues)
+- **Author:** [Wassem Nabil](https://github.com/wnabil)
+- **Website:** [qapas.com](https://qapas.com)
 
-- Please refere to `polyfills.ts` demo
+---
 
-## Contribution, Ideas and pull requests are welcome, Please open an issue on Github or contact me on <breakersniper@gmail.com> if i didn't response in approx 2 days
+<div align="center">
 
-## Configuration
+**Made with ❤️ by [Wassem Nabil](https://github.com/wnabil)**
 
-Basically all configurable options are wrapped into exportAsConfig object.
-For the special options for each format alone please set your custom options inside exportAsConfig.options object.
-Example:
+If this library helped you, please consider giving it a ⭐ on [GitHub](https://github.com/wnabil/ngx-export-as)!
 
-```javascript
-const exportAsConfig: ExportAsConfig = {
-  type: "docx", // the type you want to download
-  elementId: "myTableIdElementId", // the id of html/table element,
-  options: {
-    // html-docx-js document options
-    orientation: "landscape",
-    margins: {
-      top: "20",
-    },
-  },
-};
-```
-
-## Important Notes
-
-- Json type get method will return the data in json object format not as base64
-
-- Not all the libraries supports the html element, for example the json and xlsx formats required the element to be an HTML Table
-
-### Change Logs
-
-- **1.0.0**
-
-  - Initial release
-  - Implement all available methods
-
-- **1.1.0**
-
-  - Upgrade to Angular 6
-
-- **1.1.1**
-
-  - fix issue #5
-
-- **1.2.0**
-
-  - switch to ng lib, ng-packagr
-
-- **1.2.2**
-
-  - fix readme and license
-
-- **1.2.3**
-
-  - Fix issue #9 - update readme
-  - Fix issue #12 - Add support for internet explorer "Please check the docs section for IE"
-  - Fix issue #15 - Support for angular 4 and 5
-  - Fix issue #16 - add support for special language chars
-
-- **1.2.4**
-
-  - fix all pdf issues for html2canvas - #1, #3, #11
-
-- **1.2.6**
-
-  - Save method now will return a subscription, please make sure to trigger `.subscribe()`
-
-- **1.3.0**
-
-  - Upgrade to Angular 8
-
-- **1.3.1**
-
-  - Add support for PDF header, footer, page number and other possible actions before rendering - Thanks to Sreekanth2108 #35 fix #38
-
-- **1.4.0**
-
-  - Remove docx library as a temp solution for SSR builds, fix #21 - please use v1.3.1 until we have a new implementation for docx
-
-- **1.4.1**
-
-  - Update for Angular 9
-
-- **1.4.2**
-
-  - Fix #61 add support for any element type for pdf: available types now are string, element, canvas, img or element id
-
-- **1.5.0**
-
-  - Fix #84 Support for Angular 10, Thanks to kgish
-
-- **1.12.0**
-
-  - Upgrade to Angular 12
-
-- **1.12.1**
-
-  - fix #76 Re-enable docx "project target es2015 is required"
-
-- **1.12.2**
-
-  - fix #97, fix csv comma, Thanks to souradeep07
-
-- **1.13.0**
-
-  - fix #102, Upgrade to Angular 13
-
-- **1.14.1**
-
-  - fix #109, Angular 14
-  - DOCX is not supported [check this issue](https://github.com/privateOmega/html-to-docx/issues/145)
-
-- **1.15.0**
-
-  - fix #110, Support for Angular 15, Thanks to MuhAssar
-
-- **1.15.1**
-
-  - fix PR #112, html2canvas SSR fix, Thanks to enea4science
-
-- **1.16.0**
-
-  - Angular 16
-
-- **1.17.0**
-
-  - Angular 17 PR #114, thanks to MuhAssar
-
-- **1.18.0**
-
-  - Angular 18 PR #115, thanks to AileThrowmountain
-
-- **1.19.0**
-
-  - Angular 19 PR #116, thanks to ralphinevanbraak
-
-- **1.20.0**
-  - Angular 20 PR #118, thanks to jhoglin
+</div>
