@@ -2,7 +2,15 @@
 
 All notable changes to ngx-export-as will be documented in this file.
 
-## Version 1.21.x (2025)
+## Version 1.21.x
+
+
+### v1.21.2
+
+#### 🐛 **Fixes**
+- **Fixed invalid tslib dependency version** - Corrected `tslib` from non-existent `^2.8.2` to valid `^2.8.1` to resolve `npm ERR! notarget` installation failures in consuming apps. [Issue #137](https://github.com/wnabil/ngx-export-as/issues/137)
+
+
 
 ### v1.21.1
 
