@@ -814,7 +814,7 @@ And to all users who reported issues and provided feedback!
 - **Changelog:** [CHANGELOG.md](CHANGELOG.md)
 - **Migration Guide:** [MIGRATION.md](MIGRATION.md) - v1.20.x → v1.21.0
 - **Author:** [Wassem Nabil](https://github.com/wnabil)
-- **Website:** [qapas.com](https://qapas.com)
+- **Website:** [ok2code.com](https://ok2code.com)
 
 ---
 
